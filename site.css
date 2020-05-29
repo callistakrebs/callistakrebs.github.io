@@ -7,7 +7,7 @@ body {
 
 /* Style the header */
 header {
-  background-color: rgb(94, 230, 216);
+  background-color: paleturquoise;
   padding: 40px;
   text-align: center;
   font-size: 40px;
@@ -25,7 +25,7 @@ header {
   flex: 1;
   justify-content: space-between;
   padding: 10px;
-  color: rgb(94, 230, 216);
+  color: paleturquoise;
   text-decoration: none;
   text-align: center;
 }
@@ -33,6 +33,7 @@ header {
 /* Change color on hover */
 .menu a:hover {
   background-color: gray;
+  color: turquoise;
 }
 
 .content {
