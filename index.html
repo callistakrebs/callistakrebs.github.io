@@ -2,25 +2,109 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="site.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&display=swap"
+      rel="stylesheet"
+    />
     <meta charset="utf-8" />
     <title>Hi, I'm Callista!</title>
   </head>
+  <body>
+    <div class="header">
+      <h2>Callista Krebs</h2>
+    </div>
 
-  <div class="header">
-    <h2>Callista Krebs</h2>
-  </div>
-  
-  <div class="menu">
-    <a href="/aboutMe">About Me</a>
-    <a href="/projects">Projects</a>
-    <a href="/hobbies">Hobbies</a>
-    <a href="/interests">Interests</a>
-  </div>
-  
-  <div class="footer">
-    <p>Page</p>
-  </div>
-  
-  </body> 
+    <div class="menu" id="myMenu">
+      <a href="#aboutMe">About Me</a>
+      <a href="#projects">Projects</a>
+      <a href="#interests">Interests</a>
+    </div>
 
+    <div class="content" id="aboutMe">
+      <h1>Hi, I'm Callista</h1>
+      <image
+        src="images/profile_pic_crop.jpg"
+        alt="Profile Picture"
+        class="profilePicture"
+      ></image>
+      <p>
+        I’m a student at The Ohio State University where I study chemical
+        engineering with a minor in computer science. I love reading, cooking,
+        yoga, surfing, and pretty much all water sports.
+      </p>
+      <p>
+        Last year, I had the opportunity to work for ExxonMobil as an engineer
+        at one of their chemical manufacturing sites. Though the experience
+        taught me a ton about engineering projects and the chemical
+        manufacturing industry, this year, I wanted to try my hand at something
+        new. I decided to explore the world of computer science and started
+        learning to program, working on a few small projects here and there,
+        participating in hackathons, picking up a minor in CS, and building this
+        website.
+      </p>
+      <p>
+        In addition to computer science, over the past year I've become
+        increasingly interested in the biotechnology industry. This summer
+        (2020), I'll be working for Illumina, a biotech company based in San
+        Diego, California that produces genome-sequencing technology. I’m
+        excited to explore the industry and learn more about genetic sequencing.
+      </p>
+    </div>
+
+    <div class="content" id="projects">
+      <h1>Projects</h1>
+      <h2>HackOHI/O 2019</h2>
+      <p>
+        For me, exploring the computer science industry meant finally joining my
+        friends in their 24-hour hackathons at Ohio State. This past fall, I
+        joined a team with a few friends at HackOHI/O, a 24-hour programming
+        marathon for Ohio State students. Over 800 people joined the competition
+        and worked in the Ohio Union all weekend on various programming projects
+        and company-sponsored challenges. My team and I developed an iOS app to
+        recommend clothing choices to users based on weather and style. The app
+        used Microsoft Azure Computer Vision technology to categorize users’
+        clothing from an uploaded image. It was a great learning experience for
+        me, learning how to use tools like Microsoft Azure and building software
+        in a team. In the end, we won “Best New to Hack” award for developing an
+        impressive product with no previous hackathon experience!
+      </p>
+      <h2>Brain Health Hack 2020</h2>
+      <p>
+        My second hackathon experience slightly overlapped with my interests in
+        the biotech field. At the 2020 Brain Health Hack at OSU’s Wexner Medical
+        Center, my friends and I worked in a team to develop an app that would
+        help PTSD victims log and track their symptoms. The app, SymptomWatch,
+        allowed users to log their symptoms after an episode or attack, keep
+        track of how often they occurred, export the information to be sent to
+        their doctor, and call an emergency contact if needed. The purpose of
+        the app was to help victims of PTSD better communicate with their doctor
+        and monitor their progress, allowing adjustments to treatment if needed.
+        In the end, we got to present to a handful of healthcare professionals
+        at The Wex, and the project won an award for “Most Technically
+        Advanced!”
+      </p>
+    </div>
+
+    <div class="content" id="interests">
+      <h1>Interests</h1>
+      <p></p>
+    </div>
+  </body>
 </html>
+
+<script>
+  window.onscroll = function () {
+    myFunction();
+  };
+
+  var header = document.getElementById("myMenu");
+  var sticky = header.offsetTop;
+
+  function myFunction() {
+    if (window.pageYOffset > sticky) {
+      header.classList.add("sticky");
+    } else {
+      header.classList.remove("sticky");
+    }
+  }
+</script>

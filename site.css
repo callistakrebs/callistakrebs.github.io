@@ -1,34 +1,59 @@
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
+  font-size: 20px;
 }
 
 /* Style the header */
 .header {
-  background-color: palegreen;
+  background-color: paleturquoise;
   padding: 30px;
   text-align: center;
   font-size: 35px;
+  color: rgb(59, 58, 58);
+  font-family: "Roboto Condensed", sans-serif;
 }
 
 /* Container for flexboxes */
 .menu {
   display: flex;
-  background-color: paleturquoise;
+  background-color: rgb(59, 58, 58);
 }
 
 .menu a {
   flex: 1;
   justify-content: space-between;
   padding: 10px;
+  color: paleturquoise;
+  text-decoration: none;
+  text-align: center;
 }
 
 /* Change color on hover */
 .menu a:hover {
-  background-color: cyan;
+  background-color: gray;
 }
 
-.footer {
-  background-color: #f1f1f1;
-  padding: 10px;
-  text-align: center;
+.content {
+  padding: 50px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 102px;
+}
+
+.profilePicture {
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 10px;
+  border-radius: 20%;
+  height: 350px;
+  width: 350px;
+  align-self: center;
+  float: left;
 }
