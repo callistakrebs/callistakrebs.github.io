@@ -2,14 +2,15 @@ body {
   font-family: "Roboto Condensed", sans-serif;
   font-size: 20px;
   margin: 0;
+  line-height: 1.5em;
 }
 
 /* Style the header */
-.header {
-  background-color: paleturquoise;
-  padding: 30px;
+header {
+  background-color: rgb(94, 230, 216);
+  padding: 40px;
   text-align: center;
-  font-size: 35px;
+  font-size: 40px;
   color: rgb(59, 58, 58);
   font-family: "Roboto Condensed", sans-serif;
 }
@@ -24,7 +25,7 @@ body {
   flex: 1;
   justify-content: space-between;
   padding: 10px;
-  color: paleturquoise;
+  color: rgb(94, 230, 216);
   text-decoration: none;
   text-align: center;
 }
@@ -35,7 +36,7 @@ body {
 }
 
 .content {
-  padding: 50px;
+  margin: 50px;
 }
 
 .sticky {
@@ -49,12 +50,12 @@ body {
 }
 
 .profilePicture {
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-bottom: 10px;
-  border-radius: 20%;
-  height: 350px;
-  width: 350px;
-  align-self: center;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  border-radius: 50%;
+  height: 320px;
+  width: 320px;
   float: left;
 }
