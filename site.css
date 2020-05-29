@@ -28,6 +28,7 @@ header {
   color: paleturquoise;
   text-decoration: none;
   text-align: center;
+  max-width: 90ch;
 }
 
 /* Change color on hover */
@@ -37,7 +38,8 @@ header {
 }
 
 .content {
-  margin: 50px;
+  margin: auto;
+  max-width: 90ch;
 }
 
 .sticky {
