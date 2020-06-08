@@ -7,7 +7,7 @@ body {
 
 /* Style the header */
 header {
-  background-color: paleturquoise;
+  background-color: #afeeee;
   padding: 40px;
   text-align: center;
   font-size: 40px;
@@ -28,7 +28,6 @@ header {
   color: paleturquoise;
   text-decoration: none;
   text-align: center;
-  max-width: 90ch;
 }
 
 /* Change color on hover */
@@ -61,4 +60,47 @@ header {
   height: 320px;
   width: 320px;
   float: left;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    "cooking yoga reading"
+    "surfing snowboarding travel";
+  justify-content: center;
+}
+
+.grid-image {
+  height: 200px;
+  width: 200px;
+  padding: 30px;
+}
+.grid-cooking {
+  grid-area: cooking;
+  text-align: center;
+}
+
+.grid-yoga {
+  grid-area: yoga;
+  text-align: center;
+}
+
+.grid-surfing {
+  grid-area: surfing;
+  text-align: center;
+}
+
+.grid-snowboarding {
+  grid-area: snowboarding;
+  text-align: center;
+}
+
+.grid-reading {
+  grid-area: reading;
+  text-align: center;
+}
+
+.grid-travel {
+  grid-area: travel;
+  text-align: center;
 }
