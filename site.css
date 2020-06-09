@@ -1,5 +1,5 @@
 body {
-  font-family: "Roboto Condensed", sans-serif;
+  font-family: "Roboto Condensed";
   font-size: 20px;
   margin: 0;
   line-height: 1.5em;
@@ -70,6 +70,12 @@ header {
   justify-content: center;
 }
 
+.grid-container a {
+  text-decoration: none;
+  color: black;
+  outline: none;
+}
+
 .grid-image {
   height: 200px;
   width: 200px;
@@ -103,4 +109,41 @@ header {
 .grid-travel {
   grid-area: travel;
   text-align: center;
+}
+
+.hackImage {
+  margin-left: 50px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  height: 275px;
+  width: 275px;
+  float: right;
+}
+
+.bhhImage {
+  margin-right: 50px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  height: 275px;
+  width: 275px;
+  float: left;
+}
+
+footer {
+  background-color: rgb(59, 58, 58);
+  text-align: center;
+  align-items: center;
+  padding: 20px;
+  color: paleturquoise;
+}
+
+footer a {
+  text-decoration: none;
+  color: paleturquoise;
+  outline: none;
+}
+
+ion-icon {
+  height: 30px;
+  width: 30px;
 }
