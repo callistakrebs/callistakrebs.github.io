@@ -147,3 +147,7 @@ ion-icon {
   height: 30px;
   width: 30px;
 }
+
+body a {
+  outline: none;
+}
