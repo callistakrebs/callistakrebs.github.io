@@ -25,7 +25,7 @@ header {
   flex: 1;
   justify-content: space-between;
   padding: 10px;
-  color: paleturquoise;
+  color: #afeeee;
   text-decoration: none;
   text-align: center;
 }
@@ -65,8 +65,8 @@ header {
 .grid-container {
   display: grid;
   grid-template-areas:
-    "cooking yoga reading"
-    "surfing snowboarding travel";
+    "running surfing reading"
+    "cooking snowboarding travel";
   justify-content: center;
 }
 
@@ -78,16 +78,16 @@ header {
 
 .grid-image {
   height: 200px;
-  width: 200px;
-  padding: 30px;
+  width: 225px;
+  padding: 0px;
 }
 .grid-cooking {
   grid-area: cooking;
   text-align: center;
 }
 
-.grid-yoga {
-  grid-area: yoga;
+.grid-running {
+  grid-area: running;
   text-align: center;
 }
 
