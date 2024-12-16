@@ -1,5 +1,5 @@
 # Advent of Code - Day 1
-[Next Day >](day2.html)
+[< Advent of Code](index.html) [Next Day >](day2.html)
 
 ### My Code
 ```{.python .numberLines}
