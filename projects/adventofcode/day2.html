@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/site.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title></title>
+    
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Callista Krebs</h1>
+            <p>
+                <a href="/">Home</a>
+                <a href="/projects">Projects</a>
+                <a href="/contact.html">Contact</a>
+            </p>
+        </header>
+        <article>
+<!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="advent-of-code---day-2">Advent of Code - Day 2</h1>
+<p><a href="day1.html">&lt; Prev Day</a> <a href="day3.html">Next Day
+&gt;</a></p>
+<h2 id="my-code">My Code</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">def</span> check_safe(levels):</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    safe <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>    levels_copy <span class="op">=</span> levels.copy()</span>
+<span id="cb1-4"><a href="#cb1-4"></a>    levels_copy.sort() <span class="co"># sort forwards and see if its the same</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="cf">if</span> levels <span class="op">==</span> levels_copy:</span>
+<span id="cb1-6"><a href="#cb1-6"></a>        safe <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>    </span>
+<span id="cb1-8"><a href="#cb1-8"></a>    levels_copy.sort(reverse<span class="op">=</span><span class="va">True</span>) <span class="co"># sort backwards and see if its the same</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>    <span class="cf">if</span> levels <span class="op">==</span> levels_copy:</span>
+<span id="cb1-10"><a href="#cb1-10"></a>        safe <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a>    last <span class="op">=</span> <span class="bu">int</span>(levels[<span class="dv">0</span>])</span>
+<span id="cb1-13"><a href="#cb1-13"></a>    i <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a>    <span class="cf">while</span> safe <span class="kw">and</span> i <span class="op">&lt;</span> <span class="bu">len</span>(levels):</span>
+<span id="cb1-15"><a href="#cb1-15"></a>        <span class="cf">if</span> <span class="bu">abs</span>(<span class="bu">int</span>(levels[i]) <span class="op">-</span> last) <span class="op">&gt;=</span> <span class="dv">1</span> <span class="kw">and</span> <span class="bu">abs</span>(<span class="bu">int</span>(levels[i]) <span class="op">-</span> last) <span class="op">&lt;=</span> <span class="dv">3</span>:</span>
+<span id="cb1-16"><a href="#cb1-16"></a>            safe <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a>        <span class="cf">else</span>:</span>
+<span id="cb1-18"><a href="#cb1-18"></a>            safe <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>        </span>
+<span id="cb1-20"><a href="#cb1-20"></a>        last <span class="op">=</span> <span class="bu">int</span>(levels[i])</span>
+<span id="cb1-21"><a href="#cb1-21"></a>        i <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a></span>
+<span id="cb1-23"><a href="#cb1-23"></a>    <span class="cf">return</span> safe</span>
+<span id="cb1-24"><a href="#cb1-24"></a></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day2.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb1-26"><a href="#cb1-26"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>    <span class="cf">for</span> line <span class="kw">in</span> f.readlines():</span>
+<span id="cb1-28"><a href="#cb1-28"></a>        safe <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>        levels <span class="op">=</span> [<span class="bu">int</span>(x) <span class="cf">for</span> x <span class="kw">in</span> line.strip().split(<span class="st">&quot; &quot;</span>)]</span>
+<span id="cb1-30"><a href="#cb1-30"></a>        safe <span class="op">=</span> check_safe(levels)</span>
+<span id="cb1-31"><a href="#cb1-31"></a>        </span>
+<span id="cb1-32"><a href="#cb1-32"></a>        <span class="cf">if</span> <span class="kw">not</span> safe:</span>
+<span id="cb1-33"><a href="#cb1-33"></a>            i <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a>            <span class="cf">while</span> <span class="kw">not</span> safe <span class="kw">and</span> i <span class="op">&lt;</span> <span class="bu">len</span>(levels):</span>
+<span id="cb1-35"><a href="#cb1-35"></a>                safe <span class="op">=</span> check_safe(levels[<span class="dv">0</span>:i] <span class="op">+</span> levels[i<span class="op">+</span><span class="dv">1</span>:])</span>
+<span id="cb1-36"><a href="#cb1-36"></a>                i <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a></span>
+<span id="cb1-38"><a href="#cb1-38"></a>        <span class="cf">if</span> safe:</span>
+<span id="cb1-39"><a href="#cb1-39"></a>            count <span class="op">+=</span><span class="dv">1</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="bu">print</span>(count)</span></code></pre></div>
+<h2 id="chatgpts-improved-code">ChatGPT&#x2019;s Improved Code</h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">def</span> is_sorted_or_reverse(levels):</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    <span class="co">&quot;&quot;&quot;Check if the list is sorted in ascending or descending order.&quot;&quot;&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="cf">return</span> levels <span class="op">==</span> <span class="bu">sorted</span>(levels) <span class="kw">or</span> levels <span class="op">==</span> <span class="bu">sorted</span>(levels, reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="kw">def</span> is_within_bounds(levels):</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="co">&quot;&quot;&quot;Check if the differences between consecutive levels are within bounds.&quot;&quot;&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="cf">return</span> <span class="bu">all</span>(<span class="dv">1</span> <span class="op">&lt;=</span> <span class="bu">abs</span>(levels[i] <span class="op">-</span> levels[i <span class="op">-</span> <span class="dv">1</span>]) <span class="op">&lt;=</span> <span class="dv">3</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(levels)))</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="kw">def</span> check_safe(levels):</span>
+<span id="cb2-10"><a href="#cb2-10"></a>    <span class="co">&quot;&quot;&quot;Determine if the sequence is safe.&quot;&quot;&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>    <span class="cf">return</span> is_sorted_or_reverse(levels) <span class="kw">and</span> is_within_bounds(levels)</span>
+<span id="cb2-12"><a href="#cb2-12"></a></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="kw">def</span> process_file(filename):</span>
+<span id="cb2-14"><a href="#cb2-14"></a>    <span class="co">&quot;&quot;&quot;Process the file and count safe sequences.&quot;&quot;&quot;</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>    <span class="cf">with</span> <span class="bu">open</span>(filename) <span class="im">as</span> f:</span>
+<span id="cb2-17"><a href="#cb2-17"></a>        <span class="cf">for</span> line <span class="kw">in</span> f:</span>
+<span id="cb2-18"><a href="#cb2-18"></a>            levels <span class="op">=</span> [<span class="bu">int</span>(x) <span class="cf">for</span> x <span class="kw">in</span> line.strip().split()]</span>
+<span id="cb2-19"><a href="#cb2-19"></a>            <span class="co"># Check the sequence directly</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>            <span class="cf">if</span> check_safe(levels):</span>
+<span id="cb2-21"><a href="#cb2-21"></a>                count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>            <span class="cf">else</span>:</span>
+<span id="cb2-23"><a href="#cb2-23"></a>                <span class="co"># Check by removing one element at a time</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a>                <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(levels)):</span>
+<span id="cb2-25"><a href="#cb2-25"></a>                    <span class="cf">if</span> check_safe(levels[:i] <span class="op">+</span> levels[i <span class="op">+</span> <span class="dv">1</span>:]):</span>
+<span id="cb2-26"><a href="#cb2-26"></a>                        count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a>                        <span class="cf">break</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a>    <span class="cf">return</span> count</span>
+<span id="cb2-29"><a href="#cb2-29"></a></span>
+<span id="cb2-30"><a href="#cb2-30"></a><span class="co"># Main execution</span></span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb2-32"><a href="#cb2-32"></a>    <span class="bu">print</span>(process_file(<span class="st">&quot;day2.txt&quot;</span>))</span></code></pre></div>
+<h1 id="what-i-learned">What I Learned</h1>
+<h3 id="modularization">Modularization</h3>
+<ul>
+<li>Generally, ChatGPT&#x2019;s suggested improvements were related to
+modularizing code to fit it into methods rather than just one script.
+This was not new information, but always a good reminder and still good
+practice when doing little scripts like this.</li>
+</ul>
+<h3 id="using-sorted-method-instead-of-list.sort">Using
+<code>sorted()</code> method instead of <code>list.sort()</code></h3>
+<ul>
+<li>An issue I ran into in my code is that <code>list.sort()</code>
+sorts a list in place, so I had to store a copy of each level in order
+to keep the original level in tact.</li>
+<li>Using <code>sorted()</code> has the same functionality, but not in
+place, avoiding the need to store a copy of the original level</li>
+</ul>
+<h3 id="copy"><code>copy()</code></h3>
+<ul>
+<li><p>When you want to maintain two separate instances of a list in
+Python, you have to use the <code>list.copy()</code></p></li>
+<li><p>Setting a list to the value of another list actually just points
+to the original list in Python. For example:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> a</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>a[<span class="dv">1</span>] <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(b)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Outputs: </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># [1,5,3]</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [1,5,3]</span></span></code></pre></div></li>
+</ul>
+<h3 id="all"><code>all()</code></h3>
+<ul>
+<li><p>We can use <code>all()</code> with an iterator to check for
+conditions on every element in a list.</p></li>
+<li><p>The iterator in all can also use bidirectional conditions (i.e.&#xA0;1
+&lt;= x &lt;= 3)</p></li>
+<li><p>Syntax is similar to <code>sum()</code>, but instead of the
+action we want to sum, we include the condition we want to check:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">all</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    [condition to check <span class="cf">for</span> each element] </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>([number of elements])</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div></li>
+</ul>
+            <hr />
+            <p>Callista Krebs, 2024</p>
+        </article>
+    </main>
+    <style>
+        html { -webkit-text-size-adjust: 100%; }
+        pre > code.sourceCode { white-space: pre; position: relative; }
+        pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+        pre > code.sourceCode > span:empty { height: 1.2em; }
+        .sourceCode { overflow: visible; }
+        code.sourceCode > span { color: inherit; text-decoration: inherit; }
+        div.sourceCode { margin: 1em 0; }
+        pre.sourceCode { margin: 0; }
+        @media screen {
+        div.sourceCode { overflow: auto; }
+        }
+        @media print {
+        pre > code.sourceCode { white-space: pre-wrap; }
+        pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+        }
+        pre.numberSource code
+          { counter-reset: source-line 0; }
+        pre.numberSource code > span
+          { position: relative; left: -4em; counter-increment: source-line; }
+        pre.numberSource code > span > a:first-child::before
+          { content: counter(source-line);
+            position: relative; left: -1em; text-align: right; vertical-align: baseline;
+            border: none; display: inline-block;
+            -webkit-touch-callout: none; -webkit-user-select: none;
+            -khtml-user-select: none; -moz-user-select: none;
+            -ms-user-select: none; user-select: none;
+            padding: 0 4px; width: 4em;
+            color: #aaaaaa;
+          }
+        pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+        div.sourceCode
+          {   }
+        @media screen {
+        pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+        }
+        code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+        code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+        code span.at { color: #7d9029; } /* Attribute */
+        code span.bn { color: #40a070; } /* BaseN */
+        code span.bu { color: #008000; } /* BuiltIn */
+        code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+        code span.ch { color: #4070a0; } /* Char */
+        code span.cn { color: #880000; } /* Constant */
+        code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+        code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+        code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+        code span.dt { color: #902000; } /* DataType */
+        code span.dv { color: #40a070; } /* DecVal */
+        code span.er { color: #ff0000; font-weight: bold; } /* Error */
+        code span.ex { } /* Extension */
+        code span.fl { color: #40a070; } /* Float */
+        code span.fu { color: #06287e; } /* Function */
+        code span.im { color: #008000; font-weight: bold; } /* Import */
+        code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+        code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+        code span.op { color: #666666; } /* Operator */
+        code span.ot { color: #007020; } /* Other */
+        code span.pp { color: #bc7a00; } /* Preprocessor */
+        code span.sc { color: #4070a0; } /* SpecialChar */
+        code span.ss { color: #bb6688; } /* SpecialString */
+        code span.st { color: #4070a0; } /* String */
+        code span.va { color: #19177c; } /* Variable */
+        code span.vs { color: #4070a0; } /* VerbatimString */
+        code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    </style>
+</body>
+</html>

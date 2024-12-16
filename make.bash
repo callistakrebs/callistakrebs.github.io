@@ -1,6 +1,6 @@
 htmlify() {
     pandoc \
-        --from markdown \
+        --from markdown+backtick_code_blocks \
         --to html5 \
         --standalone \
         --template template.html \
@@ -12,3 +12,9 @@ htmlify() {
 htmlify index.md index.html
 htmlify contact.md contact.html
 htmlify projects/index.md projects/index.html
+htmlify projects/adventofcode/index.md projects/adventofcode/index.html
+
+for i in {1..9}; do
+    htmlify projects/adventofcode/day$i.md projects/adventofcode/day$i.html
+done
+    

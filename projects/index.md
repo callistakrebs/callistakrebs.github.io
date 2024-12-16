@@ -5,4 +5,4 @@ keywords: [projects, blog, code, software]
 abstract: My collection of personal projects.
 ---
 # Projects
-*Coming Soon*
+* December 2024 [Advent of Code](/projects/adventofcode)
