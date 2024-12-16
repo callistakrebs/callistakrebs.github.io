@@ -1,153 +1,17 @@
-body {
-  font-family: "Roboto Condensed";
-  font-size: 20px;
-  margin: 0;
-  line-height: 1.5em;
+html {
+  box-sizing: border-box;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-/* Style the header */
-header {
-  background-color: #afeeee;
-  padding: 40px;
-  text-align: center;
-  font-size: 40px;
-  color: rgb(59, 58, 58);
-  font-family: "Roboto Condensed", sans-serif;
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
-/* Container for flexboxes */
-.menu {
-  display: flex;
-  background-color: rgb(59, 58, 58);
-}
-
-.menu a {
-  flex: 1;
-  justify-content: space-between;
-  padding: 10px;
-  color: #afeeee;
-  text-decoration: none;
-  text-align: center;
-}
-
-/* Change color on hover */
-.menu a:hover {
-  background-color: gray;
-  color: turquoise;
-}
-
-.content {
-  margin: auto;
-  max-width: 90ch;
-}
-
-.sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-.sticky + .content {
-  padding-top: 102px;
-}
-
-.profilePicture {
-  margin-left: 50px;
-  margin-right: 50px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  border-radius: 50%;
-  height: 320px;
-  width: 320px;
-  float: left;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-areas:
-    "running surfing reading"
-    "cooking snowboarding travel";
-  justify-content: center;
-}
-
-.grid-container a {
-  text-decoration: none;
-  color: black;
-  outline: none;
-}
-
-.grid-image {
-  height: 200px;
-  width: 225px;
-  padding: 0px;
-}
-.grid-cooking {
-  grid-area: cooking;
-  text-align: center;
-}
-
-.grid-running {
-  grid-area: running;
-  text-align: center;
-}
-
-.grid-surfing {
-  grid-area: surfing;
-  text-align: center;
-}
-
-.grid-snowboarding {
-  grid-area: snowboarding;
-  text-align: center;
-}
-
-.grid-reading {
-  grid-area: reading;
-  text-align: center;
-}
-
-.grid-travel {
-  grid-area: travel;
-  text-align: center;
-}
-
-.hackImage {
-  margin-left: 50px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  height: 275px;
-  width: 275px;
-  float: right;
-}
-
-.bhhImage {
-  margin-right: 50px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  height: 275px;
-  width: 275px;
-  float: left;
-}
-
-footer {
-  background-color: rgb(59, 58, 58);
-  text-align: center;
-  align-items: center;
-  padding: 20px;
-  color: paleturquoise;
-}
-
-footer a {
-  text-decoration: none;
-  color: paleturquoise;
-  outline: none;
-}
-
-ion-icon {
-  height: 30px;
-  width: 30px;
-}
-
-body a {
-  outline: none;
+main {
+  margin: 0 auto;
+  max-width: 38em;
+  text-rendering: optimizeLegibility;
+  line-height: 1.7em;
 }
