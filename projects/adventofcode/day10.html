@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/site.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title></title>
+    
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Callista Krebs</h1>
+            <p>
+                <a href="/">Home</a>
+                <a href="/projects">Projects</a>
+                <a href="/contact.html">Contact</a>
+            </p>
+        </header>
+        <article>
+<!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="advent-of-code---day-10">Advent of Code - Day 10</h1>
+<p><a href="day9.html">&lt; Prev Day</a> <a href="day11.html">Next Day
+&gt;</a></p>
+<h2 id="part-1">Part 1</h2>
+<h3 id="my-code">My Code</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">def</span> hike(grid, starting_point, peaks <span class="op">=</span> <span class="va">None</span>):</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    startr <span class="op">=</span> starting_point[<span class="dv">0</span>]</span>
+<span id="cb1-3"><a href="#cb1-3"></a>    startc <span class="op">=</span> starting_point[<span class="dv">1</span>]</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="cf">if</span> peaks <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb1-6"><a href="#cb1-6"></a>        peaks <span class="op">=</span> <span class="bu">set</span>()</span>
+<span id="cb1-7"><a href="#cb1-7"></a>    <span class="cf">for</span> dr, dc <span class="kw">in</span> directions:</span>
+<span id="cb1-8"><a href="#cb1-8"></a>        newr, newc <span class="op">=</span> startr <span class="op">+</span> dr, startc <span class="op">+</span> dc </span>
+<span id="cb1-9"><a href="#cb1-9"></a>        <span class="cf">if</span> <span class="dv">0</span> <span class="op">&lt;=</span> newr <span class="op">&lt;=</span> <span class="bu">len</span>(grid) <span class="op">-</span> <span class="dv">1</span> <span class="kw">and</span> <span class="dv">0</span> <span class="op">&lt;=</span> newc <span class="op">&lt;=</span> <span class="bu">len</span>(grid) <span class="op">-</span> <span class="dv">1</span>:</span>
+<span id="cb1-10"><a href="#cb1-10"></a>            <span class="cf">if</span> grid[newr][newc] <span class="op">==</span> grid[startr][startc] <span class="op">+</span> <span class="dv">1</span>:</span>
+<span id="cb1-11"><a href="#cb1-11"></a>                <span class="cf">if</span> grid[newr][newc] <span class="op">==</span> <span class="dv">9</span>:</span>
+<span id="cb1-12"><a href="#cb1-12"></a>                    peaks.add((newr, newc))</span>
+<span id="cb1-13"><a href="#cb1-13"></a>                <span class="cf">else</span>:</span>
+<span id="cb1-14"><a href="#cb1-14"></a>                    hike(grid, (newr,newc), peaks)</span>
+<span id="cb1-15"><a href="#cb1-15"></a>    <span class="cf">return</span> peaks</span>
+<span id="cb1-16"><a href="#cb1-16"></a></span>
+<span id="cb1-17"><a href="#cb1-17"></a>directions <span class="op">=</span> [</span>
+<span id="cb1-18"><a href="#cb1-18"></a>    (<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>), <span class="co"># up</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>    (<span class="dv">0</span>, <span class="dv">1</span>), <span class="co"># down</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>    (<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>), <span class="co">#left</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>    (<span class="dv">1</span>, <span class="dv">0</span>) <span class="co">#right</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a></span>
+<span id="cb1-23"><a href="#cb1-23"></a>]</span>
+<span id="cb1-24"><a href="#cb1-24"></a></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb1-26"><a href="#cb1-26"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day10.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb1-27"><a href="#cb1-27"></a>        grid <span class="op">=</span> f.read().split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb1-28"><a href="#cb1-28"></a>        grid <span class="op">=</span> [<span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>,<span class="bu">list</span>(row))) <span class="cf">for</span> row <span class="kw">in</span> grid]</span>
+<span id="cb1-29"><a href="#cb1-29"></a>    </span>
+<span id="cb1-30"><a href="#cb1-30"></a>    nrows <span class="op">=</span> <span class="bu">len</span>(grid)</span>
+<span id="cb1-31"><a href="#cb1-31"></a>    ncols <span class="op">=</span> <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb1-32"><a href="#cb1-32"></a></span>
+<span id="cb1-33"><a href="#cb1-33"></a>    scores <span class="op">=</span> {}</span>
+<span id="cb1-34"><a href="#cb1-34"></a>    <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(nrows):</span>
+<span id="cb1-35"><a href="#cb1-35"></a>        <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(ncols):</span>
+<span id="cb1-36"><a href="#cb1-36"></a>            <span class="cf">if</span> grid[r][c] <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb1-37"><a href="#cb1-37"></a>                reachable_peaks <span class="op">=</span> hike(grid, (r,c))</span>
+<span id="cb1-38"><a href="#cb1-38"></a>                scores[(r,c)] <span class="op">=</span> <span class="bu">len</span>(reachable_peaks)</span>
+<span id="cb1-39"><a href="#cb1-39"></a></span>
+<span id="cb1-40"><a href="#cb1-40"></a>    <span class="bu">print</span>(<span class="bu">sum</span>(scores.values()))</span></code></pre></div>
+<h3 id="chatgpts-improved-code">ChatGPT&#x2019;s Improved Code</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">def</span> hike(grid, starting_point, peaks<span class="op">=</span><span class="va">None</span>, visited<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    <span class="cf">if</span> peaks <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb2-3"><a href="#cb2-3"></a>        peaks <span class="op">=</span> <span class="bu">set</span>()</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="cf">if</span> visited <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb2-5"><a href="#cb2-5"></a>        visited <span class="op">=</span> <span class="bu">set</span>()</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    </span>
+<span id="cb2-7"><a href="#cb2-7"></a>    startr, startc <span class="op">=</span> starting_point</span>
+<span id="cb2-8"><a href="#cb2-8"></a>    visited.add((startr, startc))</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    </span>
+<span id="cb2-10"><a href="#cb2-10"></a>    <span class="cf">for</span> dr, dc <span class="kw">in</span> DIRECTIONS:</span>
+<span id="cb2-11"><a href="#cb2-11"></a>        newr, newc <span class="op">=</span> startr <span class="op">+</span> dr, startc <span class="op">+</span> dc</span>
+<span id="cb2-12"><a href="#cb2-12"></a>        <span class="cf">if</span> <span class="dv">0</span> <span class="op">&lt;=</span> newr <span class="op">&lt;</span> <span class="bu">len</span>(grid) <span class="kw">and</span> <span class="dv">0</span> <span class="op">&lt;=</span> newc <span class="op">&lt;</span> <span class="bu">len</span>(grid[<span class="dv">0</span>]):</span>
+<span id="cb2-13"><a href="#cb2-13"></a>            <span class="cf">if</span> (newr, newc) <span class="kw">not</span> <span class="kw">in</span> visited <span class="kw">and</span> grid[newr][newc] <span class="op">==</span> grid[startr][startc] <span class="op">+</span> <span class="dv">1</span>:</span>
+<span id="cb2-14"><a href="#cb2-14"></a>                <span class="cf">if</span> grid[newr][newc] <span class="op">==</span> <span class="dv">9</span>:</span>
+<span id="cb2-15"><a href="#cb2-15"></a>                    peaks.add((newr, newc))</span>
+<span id="cb2-16"><a href="#cb2-16"></a>                <span class="cf">else</span>:</span>
+<span id="cb2-17"><a href="#cb2-17"></a>                    hike(grid, (newr, newc), peaks, visited)</span>
+<span id="cb2-18"><a href="#cb2-18"></a>    <span class="cf">return</span> peaks</span>
+<span id="cb2-19"><a href="#cb2-19"></a></span>
+<span id="cb2-20"><a href="#cb2-20"></a>DIRECTIONS <span class="op">=</span> [</span>
+<span id="cb2-21"><a href="#cb2-21"></a>    (<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>),  <span class="co"># up</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>    (<span class="dv">0</span>, <span class="dv">1</span>),   <span class="co"># down</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a>    (<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>),  <span class="co"># left</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a>    (<span class="dv">1</span>, <span class="dv">0</span>)    <span class="co"># right</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>]</span>
+<span id="cb2-26"><a href="#cb2-26"></a></span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb2-28"><a href="#cb2-28"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day10.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb2-29"><a href="#cb2-29"></a>        grid <span class="op">=</span> [<span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, <span class="bu">list</span>(row))) <span class="cf">for</span> row <span class="kw">in</span> f.read().strip().split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)]</span>
+<span id="cb2-30"><a href="#cb2-30"></a>    </span>
+<span id="cb2-31"><a href="#cb2-31"></a>    nrows <span class="op">=</span> <span class="bu">len</span>(grid)</span>
+<span id="cb2-32"><a href="#cb2-32"></a>    ncols <span class="op">=</span> <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb2-33"><a href="#cb2-33"></a>    scores <span class="op">=</span> {}</span>
+<span id="cb2-34"><a href="#cb2-34"></a></span>
+<span id="cb2-35"><a href="#cb2-35"></a>    <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(nrows):</span>
+<span id="cb2-36"><a href="#cb2-36"></a>        <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(ncols):</span>
+<span id="cb2-37"><a href="#cb2-37"></a>            <span class="cf">if</span> grid[r][c] <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb2-38"><a href="#cb2-38"></a>                reachable_peaks <span class="op">=</span> hike(grid, (r, c))</span>
+<span id="cb2-39"><a href="#cb2-39"></a>                scores[(r, c)] <span class="op">=</span> <span class="bu">len</span>(reachable_peaks)</span>
+<span id="cb2-40"><a href="#cb2-40"></a></span>
+<span id="cb2-41"><a href="#cb2-41"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Total reachable peaks: </span><span class="sc">{</span><span class="bu">sum</span>(scores.values())<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h2 id="part-2">Part 2</h2>
+<h3 id="my-code-1">My Code</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">def</span> hike(grid, starting_point, peaks <span class="op">=</span> <span class="va">None</span>, rating <span class="op">=</span> <span class="va">None</span>):</span>
+<span id="cb3-4"><a href="#cb3-4"></a>    startr <span class="op">=</span> starting_point[<span class="dv">0</span>]</span>
+<span id="cb3-5"><a href="#cb3-5"></a>    startc <span class="op">=</span> starting_point[<span class="dv">1</span>]</span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a>    <span class="cf">if</span> peaks <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb3-8"><a href="#cb3-8"></a>        peaks <span class="op">=</span> defaultdict(<span class="bu">int</span>)</span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a>    <span class="cf">for</span> dr, dc <span class="kw">in</span> directions:</span>
+<span id="cb3-11"><a href="#cb3-11"></a>        newr, newc <span class="op">=</span> startr <span class="op">+</span> dr, startc <span class="op">+</span> dc </span>
+<span id="cb3-12"><a href="#cb3-12"></a>        <span class="cf">if</span> <span class="dv">0</span> <span class="op">&lt;=</span> newr <span class="op">&lt;=</span> <span class="bu">len</span>(grid) <span class="op">-</span> <span class="dv">1</span> <span class="kw">and</span> <span class="dv">0</span> <span class="op">&lt;=</span> newc <span class="op">&lt;=</span> <span class="bu">len</span>(grid) <span class="op">-</span> <span class="dv">1</span>:</span>
+<span id="cb3-13"><a href="#cb3-13"></a>            <span class="cf">if</span> grid[newr][newc] <span class="op">==</span> grid[startr][startc] <span class="op">+</span> <span class="dv">1</span>:</span>
+<span id="cb3-14"><a href="#cb3-14"></a>                <span class="cf">if</span> grid[newr][newc] <span class="op">==</span> <span class="dv">9</span>:</span>
+<span id="cb3-15"><a href="#cb3-15"></a>                    peaks[(newr, newc)] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>                <span class="cf">else</span>:</span>
+<span id="cb3-17"><a href="#cb3-17"></a>                    hike(grid, (newr,newc), peaks)</span>
+<span id="cb3-18"><a href="#cb3-18"></a>    <span class="cf">return</span> peaks</span>
+<span id="cb3-19"><a href="#cb3-19"></a></span>
+<span id="cb3-20"><a href="#cb3-20"></a>directions <span class="op">=</span> [</span>
+<span id="cb3-21"><a href="#cb3-21"></a>    (<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>), <span class="co"># up</span></span>
+<span id="cb3-22"><a href="#cb3-22"></a>    (<span class="dv">0</span>, <span class="dv">1</span>), <span class="co"># down</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a>    (<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>), <span class="co">#left</span></span>
+<span id="cb3-24"><a href="#cb3-24"></a>    (<span class="dv">1</span>, <span class="dv">0</span>) <span class="co">#right</span></span>
+<span id="cb3-25"><a href="#cb3-25"></a></span>
+<span id="cb3-26"><a href="#cb3-26"></a>]</span>
+<span id="cb3-27"><a href="#cb3-27"></a></span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb3-29"><a href="#cb3-29"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day10.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb3-30"><a href="#cb3-30"></a>        grid <span class="op">=</span> f.read().split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb3-31"><a href="#cb3-31"></a>        grid <span class="op">=</span> [<span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>,<span class="bu">list</span>(row))) <span class="cf">for</span> row <span class="kw">in</span> grid]</span>
+<span id="cb3-32"><a href="#cb3-32"></a>    </span>
+<span id="cb3-33"><a href="#cb3-33"></a>    nrows <span class="op">=</span> <span class="bu">len</span>(grid)</span>
+<span id="cb3-34"><a href="#cb3-34"></a>    ncols <span class="op">=</span> <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb3-35"><a href="#cb3-35"></a></span>
+<span id="cb3-36"><a href="#cb3-36"></a>    rating <span class="op">=</span> {}</span>
+<span id="cb3-37"><a href="#cb3-37"></a>    <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(nrows):</span>
+<span id="cb3-38"><a href="#cb3-38"></a>        <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(ncols):</span>
+<span id="cb3-39"><a href="#cb3-39"></a>            <span class="cf">if</span> grid[r][c] <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb3-40"><a href="#cb3-40"></a>                peaks_nroutes <span class="op">=</span> hike(grid, (r,c))</span>
+<span id="cb3-41"><a href="#cb3-41"></a>                rating[(r,c)] <span class="op">=</span> <span class="bu">sum</span>(peaks_nroutes.values())</span>
+<span id="cb3-42"><a href="#cb3-42"></a></span>
+<span id="cb3-43"><a href="#cb3-43"></a>    <span class="bu">print</span>(<span class="bu">sum</span>(rating.values()))</span></code></pre></div>
+<h3 id="chatgpts-improved-code-1">ChatGPT&#x2019;s Improved Code</h3>
+<p>At first attempt, ChatGPT tried to use the <code>visited</code> set
+implementation in Part 2 as well, but I pointed out that this won&#x2019;t work
+for Part 2, because we care about the number of distinct paths to reach
+the peaks (grid values of 9), and so we can&#x2019;t disregard states just
+because they had already been visited.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="kw">def</span> hike(grid, starting_point, peaks<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="cf">if</span> peaks <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb4-5"><a href="#cb4-5"></a>        peaks <span class="op">=</span> defaultdict(<span class="bu">int</span>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a>    startr, startc <span class="op">=</span> starting_point</span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="cf">for</span> dr, dc <span class="kw">in</span> DIRECTIONS:</span>
+<span id="cb4-10"><a href="#cb4-10"></a>        newr, newc <span class="op">=</span> startr <span class="op">+</span> dr, startc <span class="op">+</span> dc</span>
+<span id="cb4-11"><a href="#cb4-11"></a>        <span class="cf">if</span> <span class="dv">0</span> <span class="op">&lt;=</span> newr <span class="op">&lt;</span> <span class="bu">len</span>(grid) <span class="kw">and</span> <span class="dv">0</span> <span class="op">&lt;=</span> newc <span class="op">&lt;</span> <span class="bu">len</span>(grid[<span class="dv">0</span>]):</span>
+<span id="cb4-12"><a href="#cb4-12"></a>            <span class="cf">if</span> grid[newr][newc] <span class="op">==</span> grid[startr][startc] <span class="op">+</span> <span class="dv">1</span>:</span>
+<span id="cb4-13"><a href="#cb4-13"></a>                <span class="cf">if</span> grid[newr][newc] <span class="op">==</span> <span class="dv">9</span>:</span>
+<span id="cb4-14"><a href="#cb4-14"></a>                    peaks[(newr, newc)] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a>                <span class="cf">else</span>:</span>
+<span id="cb4-16"><a href="#cb4-16"></a>                    <span class="co"># Recursively explore all paths</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>                    sub_peaks <span class="op">=</span> hike(grid, (newr, newc))</span>
+<span id="cb4-18"><a href="#cb4-18"></a>                    <span class="cf">for</span> peak, count <span class="kw">in</span> sub_peaks.items():</span>
+<span id="cb4-19"><a href="#cb4-19"></a>                        peaks[peak] <span class="op">+=</span> count</span>
+<span id="cb4-20"><a href="#cb4-20"></a>    <span class="cf">return</span> peaks</span>
+<span id="cb4-21"><a href="#cb4-21"></a></span>
+<span id="cb4-22"><a href="#cb4-22"></a>DIRECTIONS <span class="op">=</span> [</span>
+<span id="cb4-23"><a href="#cb4-23"></a>    (<span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>),  <span class="co"># up</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a>    (<span class="dv">0</span>, <span class="dv">1</span>),   <span class="co"># down</span></span>
+<span id="cb4-25"><a href="#cb4-25"></a>    (<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>),  <span class="co"># left</span></span>
+<span id="cb4-26"><a href="#cb4-26"></a>    (<span class="dv">1</span>, <span class="dv">0</span>)    <span class="co"># right</span></span>
+<span id="cb4-27"><a href="#cb4-27"></a>]</span>
+<span id="cb4-28"><a href="#cb4-28"></a></span>
+<span id="cb4-29"><a href="#cb4-29"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb4-30"><a href="#cb4-30"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day10.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb4-31"><a href="#cb4-31"></a>        grid <span class="op">=</span> [<span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, <span class="bu">list</span>(row))) <span class="cf">for</span> row <span class="kw">in</span> f.read().strip().split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)]</span>
+<span id="cb4-32"><a href="#cb4-32"></a></span>
+<span id="cb4-33"><a href="#cb4-33"></a>    nrows, ncols <span class="op">=</span> <span class="bu">len</span>(grid), <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb4-34"><a href="#cb4-34"></a></span>
+<span id="cb4-35"><a href="#cb4-35"></a>    ratings <span class="op">=</span> {}</span>
+<span id="cb4-36"><a href="#cb4-36"></a>    <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(nrows):</span>
+<span id="cb4-37"><a href="#cb4-37"></a>        <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(ncols):</span>
+<span id="cb4-38"><a href="#cb4-38"></a>            <span class="cf">if</span> grid[r][c] <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb4-39"><a href="#cb4-39"></a>                peaks_nroutes <span class="op">=</span> hike(grid, (r, c))</span>
+<span id="cb4-40"><a href="#cb4-40"></a>                ratings[(r, c)] <span class="op">=</span> <span class="bu">sum</span>(peaks_nroutes.values())</span>
+<span id="cb4-41"><a href="#cb4-41"></a></span>
+<span id="cb4-42"><a href="#cb4-42"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Total distinct routes to peaks: </span><span class="sc">{</span><span class="bu">sum</span>(ratings.values())<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h2 id="what-i-learned">What I Learned</h2>
+<h3 id="recursion-with-collections">Recursion with Collections</h3>
+<ul>
+<li>When building a collection (list, set, dict, etc.) in place through
+recursion, you have to pass the collection to each recursive call to
+avoid nested collections being created.</li>
+<li>To ensure the collection is only initialized once, you can use the
+simple <code>if collection is None:</code> logic.</li>
+</ul>
+<h3 id="memoization">Memoization</h3>
+<ul>
+<li>ChatGPT added the <code>visited</code> set to track states that had
+already been visited from the trailhead in question.</li>
+<li>This helps avoid repeated work in the recursion, reducing the number
+of recursive calls being made.</li>
+</ul>
+<h3 id="python-constant-naming-convention">Python Constant Naming
+Convention</h3>
+<ul>
+<li>In Python, constants are typically named with all caps. In my case,
+<code>directions</code> is a constant so it should be named
+<code>DIRECTIONS</code>.</li>
+</ul>
+<h3 id="unpacking-tuples">Unpacking Tuples</h3>
+<ul>
+<li>Tuples are unpacked in one line without having to select each
+individual value in the tuple.</li>
+<li>I knew this but forgot because I had recently been thinking about
+math and comparisons with tuples, which do require referencing
+individual values.</li>
+</ul>
+<h3 id="isolation-of-recursive-calls">Isolation of Recursive Calls</h3>
+<ul>
+<li>In my implementation for Part 2, I use a global dictionary
+<code>peaks</code> for tracking the routes to each peak and pass this to
+each recursive call.</li>
+<li>Alternatively, ChatGPT used <code>sub_peaks</code> and merged each
+<code>sub_peaks</code> into the main <code>peaks</code> dictionary after
+each recursion.</li>
+<li>This doesn&#x2019;t make a difference in terms of time and performance, but
+after some back and forth, ChatGPT pointed out that it may be better for
+debugging and clarity if the result of each recursive call is isolated
+because the isolation prevents results from different recursive branches
+from potentially interfering with one another.</li>
+<li>I don&#x2019;t think it mattered much for this problem, but it could still
+be good to keep in mind when using recursion.</li>
+</ul>
+            <hr />
+            <p>Callista Krebs, 2024</p>
+        </article>
+    </main>
+    <style>
+        html { -webkit-text-size-adjust: 100%; }
+        pre > code.sourceCode { white-space: pre; position: relative; }
+        pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+        pre > code.sourceCode > span:empty { height: 1.2em; }
+        .sourceCode { overflow: visible; }
+        code.sourceCode > span { color: inherit; text-decoration: inherit; }
+        div.sourceCode { margin: 1em 0; }
+        pre.sourceCode { margin: 0; }
+        @media screen {
+        div.sourceCode { overflow: auto; }
+        }
+        @media print {
+        pre > code.sourceCode { white-space: pre-wrap; }
+        pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+        }
+        pre.numberSource code
+          { counter-reset: source-line 0; }
+        pre.numberSource code > span
+          { position: relative; left: -4em; counter-increment: source-line; }
+        pre.numberSource code > span > a:first-child::before
+          { content: counter(source-line);
+            position: relative; left: -1em; text-align: right; vertical-align: baseline;
+            border: none; display: inline-block;
+            -webkit-touch-callout: none; -webkit-user-select: none;
+            -khtml-user-select: none; -moz-user-select: none;
+            -ms-user-select: none; user-select: none;
+            padding: 0 4px; width: 4em;
+            color: #aaaaaa;
+          }
+        pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+        div.sourceCode
+          {   }
+        @media screen {
+        pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+        }
+        code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+        code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+        code span.at { color: #7d9029; } /* Attribute */
+        code span.bn { color: #40a070; } /* BaseN */
+        code span.bu { color: #008000; } /* BuiltIn */
+        code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+        code span.ch { color: #4070a0; } /* Char */
+        code span.cn { color: #880000; } /* Constant */
+        code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+        code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+        code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+        code span.dt { color: #902000; } /* DataType */
+        code span.dv { color: #40a070; } /* DecVal */
+        code span.er { color: #ff0000; font-weight: bold; } /* Error */
+        code span.ex { } /* Extension */
+        code span.fl { color: #40a070; } /* Float */
+        code span.fu { color: #06287e; } /* Function */
+        code span.im { color: #008000; font-weight: bold; } /* Import */
+        code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+        code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+        code span.op { color: #666666; } /* Operator */
+        code span.ot { color: #007020; } /* Other */
+        code span.pp { color: #bc7a00; } /* Preprocessor */
+        code span.sc { color: #4070a0; } /* SpecialChar */
+        code span.ss { color: #bb6688; } /* SpecialString */
+        code span.st { color: #4070a0; } /* String */
+        code span.va { color: #19177c; } /* Variable */
+        code span.vs { color: #4070a0; } /* VerbatimString */
+        code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    </style>
+</body>
+</html>

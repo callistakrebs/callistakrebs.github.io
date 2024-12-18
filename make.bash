@@ -14,7 +14,7 @@ htmlify contact.md contact.html
 htmlify projects/index.md projects/index.html
 htmlify projects/adventofcode/index.md projects/adventofcode/index.html
 
-for i in {1..9}; do
+for i in {1..10}; do
     htmlify projects/adventofcode/day$i.md projects/adventofcode/day$i.html
 done
     
