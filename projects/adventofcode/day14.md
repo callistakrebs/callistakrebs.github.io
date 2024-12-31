@@ -135,6 +135,6 @@ if __name__ == "__main__":
 * Again, the readability is improved with ChatGPT's code. ChatGPT also moved the grid dimensions to their own constants, which is helpful since these values changed when I was using my puzzle input versus the debug input (the example given in the problem).
 
 ### ChatGPT Can't Solve Everything
-* Since I brute-forced Part 2 by binary searching the solution space, I tried to prompy ChatGPT to give a better solution.
+* Since I brute-forced Part 2 by binary searching the solution space, I tried to prompt ChatGPT to give a better solution.
 * Though it had some clever suggestions about simulating the robots and analyzing the velocities and potential states, none of the code it output actually worked to solve the problem.
 * Since I'm pretty late on AoC as it is, determining a more clever solution and trying to implement ChatGPT's suggestions on my own will have to wait for now.

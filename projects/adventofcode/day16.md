@@ -198,13 +198,13 @@ if __name__ == "__main__":
 * The priority queue helps improve the performance and efficiency of the algorithm, as it is easy to retrieve the current min distance for an unexplored node.
 * When a node is visited, its neighbors are added to the priority queue, allowing these neighbors to be selected as the next possible visit.
 
-### Don't use `min` as a variable name
+### Don't Use `min` as a Variable Name
 * `min` is also a built-in Python function, so this could lead to confusion or misunderstanding in some contexts.
 
-### When to not use `deque`
+### When to Not Use `deque`
 * I tried using `deque` at first so that I could get the paths as a true stack rather than a queue, but this does not work in this case because the tuples would be converted to a list inside the `deque`, which meant that the pair itself wouldn't be considered, just its individual values (the row and column in the maze).
 * ChatGPT also tried to use `deque` before I corrected it, and as a result, its code looked about the same as mine in the end.
 
-### ChatGPT's Mistakes are Still Helpful
+### ChatGPT's Mistakes Are Still Helpful
 * After some back and forth and trying to debug the "improved" code, there was no functioning code from ChatGPT that gave the correct answer, and I found myself mostly converting it back to my own code.
 * Though the process did not produce an improved solution, iterating with ChatGPT still offered a few useful insights (such as not using `min` as a variable name, rediscovering why not to use `deque` in this context, etc).

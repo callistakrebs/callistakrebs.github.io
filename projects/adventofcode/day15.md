@@ -93,10 +93,10 @@ TBD! Until I can solve Day 15 part 2...
 
 ## What I Learned
 ### ChatGPT Can't Fix Everything
-* After several iterations and back and forth with ChatGPT, it always output code for Part 1 that gave the wrong answer. It insisted on using an iterative approach instead of recursive for moving the rocks, but as a result it never moved all the rocks correctly.
-* Once I asked it to write the recursive method instead, it's code was roughly the same as mine, apart from a few formatting changes, such as combining the base cases into one `if` statement in `move_rock`, and renaming `sum` to `total`.
+* After several iterations and back and forth with ChatGPT, its code for Part 1 gave the wrong answer. It insisted on using an iterative approach instead of recursive for moving the rocks and never moved all the rocks correctly.
+* Once I asked it to write the recursive method instead, its code was roughly the same as mine, apart from a few formatting changes, such as combining the base cases into one `if` statement in `move_rock`, and renaming `sum` to `total`.
 * For this reason, I didn't include an improved ChatGPT version of the code, because in my opinion there wasn't much improvment.
 
-### Advent of Code Gets pretty hard in the back half!
+### Advent of Code gets pretty hard in the back half!
 * After several days of attempting Day 15 Part 2, I still can't quite iron out all the edge cases, and it seems like ChatGPT starts to struggle with the logic as well.
 * So far, Days 14 and 15 were the first problems where ChatGPT couldn't really improve my code in an effective way, which to me further indicates that the problems do get quite a bit harder.
