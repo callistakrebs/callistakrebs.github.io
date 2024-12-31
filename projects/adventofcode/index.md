@@ -21,3 +21,7 @@ For each day, I completed the problem myself, and then asked ChatGPT how it woul
 * [Day 10](day10.html)
 * [Day 11](day11.html)
 * [Day 12](day12.html)
+* [Day 13](day13.html)
+* [Day 14](day14.html)
+* [Day 15](day15.html)
+* [Day 16](day16.html)

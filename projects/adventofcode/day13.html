@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/site.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title></title>
+    
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Callista Krebs</h1>
+            <p>
+                <a href="/">Home</a>
+                <a href="/projects">Projects</a>
+                <a href="/contact.html">Contact</a>
+            </p>
+        </header>
+        <article>
+<!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="advent-of-code---day-13">Advent of Code - Day 13</h1>
+<p><a href="day12.html">&lt; Prev Day</a> <a href="day14.html">Next Day
+&gt;</a></p>
+<h2 id="part-1">Part 1</h2>
+<h3 id="my-code">My Code</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> re</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> linprog</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">def</span> findXandY(line):</span>
+<span id="cb1-5"><a href="#cb1-5"></a>    pattern <span class="op">=</span> <span class="vs">r&quot;Button .: X\+(\d+), Y\+(\d+)&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>,re.findall(pattern, line)[<span class="dv">0</span>]))</span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">def</span> findPrize(line):</span>
+<span id="cb1-9"><a href="#cb1-9"></a>    pattern <span class="op">=</span> <span class="vs">r&quot;Prize: X=(\d+), Y=(\d+)&quot;</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>    <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>,re.findall(pattern, line)[<span class="dv">0</span>]))</span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb1-13"><a href="#cb1-13"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day13.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb1-14"><a href="#cb1-14"></a>        machines <span class="op">=</span> [machine.split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>) <span class="cf">for</span> machine <span class="kw">in</span> f.read().split(<span class="st">&quot;</span><span class="ch">\n\n</span><span class="st">&quot;</span>)]</span>
+<span id="cb1-15"><a href="#cb1-15"></a>    </span>
+<span id="cb1-16"><a href="#cb1-16"></a>    machine_rules <span class="op">=</span> []</span>
+<span id="cb1-17"><a href="#cb1-17"></a>    <span class="cf">for</span> machine <span class="kw">in</span> machines:</span>
+<span id="cb1-18"><a href="#cb1-18"></a>        machine_rules.append({<span class="st">&quot;A&quot;</span>: findXandY(machine[<span class="dv">0</span>]), <span class="st">&quot;B&quot;</span>: findXandY(machine[<span class="dv">1</span>]), <span class="st">&quot;Prize&quot;</span>: findPrize(machine[<span class="dv">2</span>])})</span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a>    tokens_min <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>    c <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">1</span>] <span class="co"># A B</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>    <span class="cf">for</span> rule <span class="kw">in</span> machine_rules:</span>
+<span id="cb1-23"><a href="#cb1-23"></a>        A_eq <span class="op">=</span> [[rule[<span class="st">&quot;A&quot;</span>][<span class="dv">0</span>], rule[<span class="st">&quot;B&quot;</span>][<span class="dv">0</span>]], <span class="co"># Ax + Bx + X</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a>                [rule[<span class="st">&quot;A&quot;</span>][<span class="dv">1</span>], rule[<span class="st">&quot;B&quot;</span>][<span class="dv">1</span>]],  <span class="co"># Ay + By + Y</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a>                ]</span>
+<span id="cb1-26"><a href="#cb1-26"></a>        b_eq <span class="op">=</span> [rule[<span class="st">&quot;Prize&quot;</span>][<span class="dv">0</span>], rule[<span class="st">&quot;Prize&quot;</span>][<span class="dv">1</span>]]</span>
+<span id="cb1-27"><a href="#cb1-27"></a>        bounds <span class="op">=</span> [(<span class="dv">0</span>,<span class="dv">100</span>), (<span class="dv">0</span>,<span class="dv">100</span>)]</span>
+<span id="cb1-28"><a href="#cb1-28"></a>        result <span class="op">=</span> linprog(c<span class="op">=</span>c, A_eq<span class="op">=</span>A_eq, b_eq<span class="op">=</span>b_eq, bounds<span class="op">=</span>bounds, integrality<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb1-29"><a href="#cb1-29"></a>        <span class="cf">if</span> result[<span class="st">&quot;success&quot;</span>]:</span>
+<span id="cb1-30"><a href="#cb1-30"></a>            tokens_min <span class="op">+=</span> <span class="bu">int</span>(result[<span class="st">&quot;fun&quot;</span>]) <span class="co"># This machine is winable, add its tokens to total</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a>    </span>
+<span id="cb1-32"><a href="#cb1-32"></a>    <span class="bu">print</span>(tokens_min)</span></code></pre></div>
+<h3 id="chatgpts-improved-code">ChatGPT&#x2019;s Improved Code</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> re</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> linprog</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Constants</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>COST_COEFFICIENTS <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">1</span>]  <span class="co"># Weights for A and B tokens</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>BOUNDS <span class="op">=</span> [(<span class="dv">0</span>, <span class="dv">100</span>), (<span class="dv">0</span>, <span class="dv">100</span>)]  <span class="co"># Bounds for A and B tokens</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="kw">def</span> parse_button_coordinates(line):</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co">    Parse the coordinates of the buttons A and B.</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="co">    Example input: &quot;Button A: X+12, Y+34&quot;</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>    pattern <span class="op">=</span> <span class="vs">r&quot;Button .: X\+(\d+), Y\+(\d+)&quot;</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>    <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, re.findall(pattern, line)[<span class="dv">0</span>]))</span>
+<span id="cb2-15"><a href="#cb2-15"></a></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="kw">def</span> parse_prize_coordinates(line):</span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">    Parse the prize coordinates.</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="co">    Example input: &quot;Prize: X=56, Y=78&quot;</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a>    pattern <span class="op">=</span> <span class="vs">r&quot;Prize: X=(\d+), Y=(\d+)&quot;</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>    <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, re.findall(pattern, line)[<span class="dv">0</span>]))</span>
+<span id="cb2-23"><a href="#cb2-23"></a></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="kw">def</span> load_machine_data(file_path):</span>
+<span id="cb2-25"><a href="#cb2-25"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a><span class="co">    Load machine data from the input file and parse rules.</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="co">    Returns a list of dictionaries containing machine constraints.</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-29"><a href="#cb2-29"></a>    <span class="cf">with</span> <span class="bu">open</span>(file_path) <span class="im">as</span> f:</span>
+<span id="cb2-30"><a href="#cb2-30"></a>        machines <span class="op">=</span> [machine.split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>) <span class="cf">for</span> machine <span class="kw">in</span> f.read().strip().split(<span class="st">&quot;</span><span class="ch">\n\n</span><span class="st">&quot;</span>)]</span>
+<span id="cb2-31"><a href="#cb2-31"></a></span>
+<span id="cb2-32"><a href="#cb2-32"></a>    machine_constraints <span class="op">=</span> []</span>
+<span id="cb2-33"><a href="#cb2-33"></a>    <span class="cf">for</span> machine <span class="kw">in</span> machines:</span>
+<span id="cb2-34"><a href="#cb2-34"></a>        machine_constraints.append({</span>
+<span id="cb2-35"><a href="#cb2-35"></a>            <span class="st">&quot;A&quot;</span>: parse_button_coordinates(machine[<span class="dv">0</span>]),</span>
+<span id="cb2-36"><a href="#cb2-36"></a>            <span class="st">&quot;B&quot;</span>: parse_button_coordinates(machine[<span class="dv">1</span>]),</span>
+<span id="cb2-37"><a href="#cb2-37"></a>            <span class="st">&quot;Prize&quot;</span>: parse_prize_coordinates(machine[<span class="dv">2</span>]),</span>
+<span id="cb2-38"><a href="#cb2-38"></a>        })</span>
+<span id="cb2-39"><a href="#cb2-39"></a>    <span class="cf">return</span> machine_constraints</span>
+<span id="cb2-40"><a href="#cb2-40"></a></span>
+<span id="cb2-41"><a href="#cb2-41"></a><span class="kw">def</span> calculate_minimum_tokens(machine_constraints):</span>
+<span id="cb2-42"><a href="#cb2-42"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-43"><a href="#cb2-43"></a><span class="co">    Calculate the minimum tokens required to win all machines.</span></span>
+<span id="cb2-44"><a href="#cb2-44"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-45"><a href="#cb2-45"></a>    tokens_min <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-46"><a href="#cb2-46"></a>    <span class="cf">for</span> rule <span class="kw">in</span> machine_constraints:</span>
+<span id="cb2-47"><a href="#cb2-47"></a>        <span class="co"># Define linear programming constraints</span></span>
+<span id="cb2-48"><a href="#cb2-48"></a>        A_eq <span class="op">=</span> [</span>
+<span id="cb2-49"><a href="#cb2-49"></a>            [rule[<span class="st">&quot;A&quot;</span>][<span class="dv">0</span>], rule[<span class="st">&quot;B&quot;</span>][<span class="dv">0</span>]],  <span class="co"># Ax + Bx = PrizeX</span></span>
+<span id="cb2-50"><a href="#cb2-50"></a>            [rule[<span class="st">&quot;A&quot;</span>][<span class="dv">1</span>], rule[<span class="st">&quot;B&quot;</span>][<span class="dv">1</span>]],  <span class="co"># Ay + By = PrizeY</span></span>
+<span id="cb2-51"><a href="#cb2-51"></a>        ]</span>
+<span id="cb2-52"><a href="#cb2-52"></a>        b_eq <span class="op">=</span> rule[<span class="st">&quot;Prize&quot;</span>]</span>
+<span id="cb2-53"><a href="#cb2-53"></a>        </span>
+<span id="cb2-54"><a href="#cb2-54"></a>        <span class="co"># Solve linear program</span></span>
+<span id="cb2-55"><a href="#cb2-55"></a>        result <span class="op">=</span> linprog(</span>
+<span id="cb2-56"><a href="#cb2-56"></a>            c<span class="op">=</span>COST_COEFFICIENTS, </span>
+<span id="cb2-57"><a href="#cb2-57"></a>            A_eq<span class="op">=</span>A_eq, </span>
+<span id="cb2-58"><a href="#cb2-58"></a>            b_eq<span class="op">=</span>b_eq, </span>
+<span id="cb2-59"><a href="#cb2-59"></a>            bounds<span class="op">=</span>BOUNDS, </span>
+<span id="cb2-60"><a href="#cb2-60"></a>            integrality<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb2-61"><a href="#cb2-61"></a>        )</span>
+<span id="cb2-62"><a href="#cb2-62"></a>        </span>
+<span id="cb2-63"><a href="#cb2-63"></a>        <span class="cf">if</span> result.success:</span>
+<span id="cb2-64"><a href="#cb2-64"></a>            tokens_min <span class="op">+=</span> <span class="bu">int</span>(result.fun)  <span class="co"># Add minimum tokens for this machine</span></span>
+<span id="cb2-65"><a href="#cb2-65"></a>    <span class="cf">return</span> tokens_min</span>
+<span id="cb2-66"><a href="#cb2-66"></a></span>
+<span id="cb2-67"><a href="#cb2-67"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb2-68"><a href="#cb2-68"></a>    machine_constraints <span class="op">=</span> load_machine_data(<span class="st">&quot;day13.txt&quot;</span>)</span>
+<span id="cb2-69"><a href="#cb2-69"></a>    tokens_min <span class="op">=</span> calculate_minimum_tokens(machine_constraints)</span>
+<span id="cb2-70"><a href="#cb2-70"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Minimum tokens required: </span><span class="sc">{</span>tokens_min<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h2 id="part-2">Part 2</h2>
+<h3 id="my-code-1">My Code</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">import</span> re</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> linprog</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="kw">def</span> findXandY(line):</span>
+<span id="cb3-6"><a href="#cb3-6"></a>    pattern <span class="op">=</span> <span class="vs">r&quot;Button .: X\+(\d+), Y\+(\d+)&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>    <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>,re.findall(pattern, line)[<span class="dv">0</span>]))</span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="kw">def</span> findPrize(line):</span>
+<span id="cb3-10"><a href="#cb3-10"></a>    pattern <span class="op">=</span> <span class="vs">r&quot;Prize: X=(\d+), Y=(\d+)&quot;</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>    <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>,re.findall(pattern, line)[<span class="dv">0</span>]))</span>
+<span id="cb3-12"><a href="#cb3-12"></a></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb3-14"><a href="#cb3-14"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day13.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb3-15"><a href="#cb3-15"></a>        machines <span class="op">=</span> [machine.split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>) <span class="cf">for</span> machine <span class="kw">in</span> f.read().split(<span class="st">&quot;</span><span class="ch">\n\n</span><span class="st">&quot;</span>)]</span>
+<span id="cb3-16"><a href="#cb3-16"></a>    </span>
+<span id="cb3-17"><a href="#cb3-17"></a>    machine_rules <span class="op">=</span> []</span>
+<span id="cb3-18"><a href="#cb3-18"></a>    <span class="cf">for</span> machine <span class="kw">in</span> machines:</span>
+<span id="cb3-19"><a href="#cb3-19"></a>        machine_rules.append({<span class="st">&quot;A&quot;</span>: findXandY(machine[<span class="dv">0</span>]), <span class="st">&quot;B&quot;</span>: findXandY(machine[<span class="dv">1</span>]), <span class="st">&quot;Prize&quot;</span>: findPrize(machine[<span class="dv">2</span>])})</span>
+<span id="cb3-20"><a href="#cb3-20"></a></span>
+<span id="cb3-21"><a href="#cb3-21"></a>    tokens_min <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-22"><a href="#cb3-22"></a>    c <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">1</span>] <span class="co"># A B</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a>    <span class="cf">for</span> rule <span class="kw">in</span> machine_rules:</span>
+<span id="cb3-24"><a href="#cb3-24"></a>        A_eq <span class="op">=</span> np.array([[rule[<span class="st">&quot;A&quot;</span>][<span class="dv">0</span>], rule[<span class="st">&quot;B&quot;</span>][<span class="dv">0</span>]], <span class="co"># Ax + Bx + X</span></span>
+<span id="cb3-25"><a href="#cb3-25"></a>                [rule[<span class="st">&quot;A&quot;</span>][<span class="dv">1</span>], rule[<span class="st">&quot;B&quot;</span>][<span class="dv">1</span>]],  <span class="co"># Ay + By + Y</span></span>
+<span id="cb3-26"><a href="#cb3-26"></a>                ], dtype<span class="op">=</span>np.uint64)</span>
+<span id="cb3-27"><a href="#cb3-27"></a>        b_eq <span class="op">=</span> np.array([rule[<span class="st">&quot;Prize&quot;</span>][<span class="dv">0</span>]<span class="op">+</span><span class="dv">10000000000000</span>, rule[<span class="st">&quot;Prize&quot;</span>][<span class="dv">1</span>]<span class="op">+</span><span class="dv">10000000000000</span>], dtype<span class="op">=</span>np.uint64)</span>
+<span id="cb3-28"><a href="#cb3-28"></a>        bounds <span class="op">=</span> [(<span class="dv">0</span>,<span class="va">None</span>), (<span class="dv">0</span>,<span class="va">None</span>)]</span>
+<span id="cb3-29"><a href="#cb3-29"></a>        result <span class="op">=</span> linprog(c<span class="op">=</span>c, A_eq<span class="op">=</span>A_eq, b_eq<span class="op">=</span>b_eq, bounds<span class="op">=</span>bounds, integrality<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">1</span>],method<span class="op">=</span><span class="st">&quot;highs&quot;</span>, options<span class="op">=</span>{<span class="st">&quot;autoscale&quot;</span>:<span class="va">True</span>, <span class="st">&quot;presolve&quot;</span>:<span class="va">False</span>})</span>
+<span id="cb3-30"><a href="#cb3-30"></a></span>
+<span id="cb3-31"><a href="#cb3-31"></a>        <span class="cf">if</span> result[<span class="st">&quot;success&quot;</span>]:</span>
+<span id="cb3-32"><a href="#cb3-32"></a>            tokens_min <span class="op">+=</span> <span class="bu">int</span>(result[<span class="st">&quot;fun&quot;</span>]) <span class="co"># This machine is winable, add its tokens to total</span></span>
+<span id="cb3-33"><a href="#cb3-33"></a>    </span>
+<span id="cb3-34"><a href="#cb3-34"></a>    <span class="bu">print</span>(tokens_min)</span></code></pre></div>
+<h3 id="chatgpts-improved-code-1">ChatGPT&#x2019;s Improved Code</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> re</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> linprog</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="kw">def</span> parse_button_coordinates(line):</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="co">&quot;&quot;&quot;Parse the coordinates of the buttons A and B.&quot;&quot;&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>    pattern <span class="op">=</span> <span class="vs">r&quot;Button .: X\+(\d+), Y\+(\d+)&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>    <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, re.findall(pattern, line)[<span class="dv">0</span>]))</span>
+<span id="cb4-9"><a href="#cb4-9"></a></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="kw">def</span> parse_prize_coordinates(line):</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    <span class="co">&quot;&quot;&quot;Parse the prize coordinates.&quot;&quot;&quot;</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a>    pattern <span class="op">=</span> <span class="vs">r&quot;Prize: X=(\d+), Y=(\d+)&quot;</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>    <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, re.findall(pattern, line)[<span class="dv">0</span>]))</span>
+<span id="cb4-14"><a href="#cb4-14"></a></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="kw">def</span> load_machine_data(file_path):</span>
+<span id="cb4-16"><a href="#cb4-16"></a>    <span class="co">&quot;&quot;&quot;Load and parse machine data from the input file.&quot;&quot;&quot;</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>    <span class="cf">with</span> <span class="bu">open</span>(file_path) <span class="im">as</span> f:</span>
+<span id="cb4-18"><a href="#cb4-18"></a>        machines <span class="op">=</span> [machine.split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>) <span class="cf">for</span> machine <span class="kw">in</span> f.read().strip().split(<span class="st">&quot;</span><span class="ch">\n\n</span><span class="st">&quot;</span>)]</span>
+<span id="cb4-19"><a href="#cb4-19"></a>    <span class="cf">return</span> [</span>
+<span id="cb4-20"><a href="#cb4-20"></a>        {</span>
+<span id="cb4-21"><a href="#cb4-21"></a>            <span class="st">&quot;A&quot;</span>: parse_button_coordinates(machine[<span class="dv">0</span>]),</span>
+<span id="cb4-22"><a href="#cb4-22"></a>            <span class="st">&quot;B&quot;</span>: parse_button_coordinates(machine[<span class="dv">1</span>]),</span>
+<span id="cb4-23"><a href="#cb4-23"></a>            <span class="st">&quot;Prize&quot;</span>: parse_prize_coordinates(machine[<span class="dv">2</span>]),</span>
+<span id="cb4-24"><a href="#cb4-24"></a>        }</span>
+<span id="cb4-25"><a href="#cb4-25"></a>        <span class="cf">for</span> machine <span class="kw">in</span> machines</span>
+<span id="cb4-26"><a href="#cb4-26"></a>    ]</span>
+<span id="cb4-27"><a href="#cb4-27"></a></span>
+<span id="cb4-28"><a href="#cb4-28"></a><span class="kw">def</span> solve_machine(rule, cost_coefficients, large_constant):</span>
+<span id="cb4-29"><a href="#cb4-29"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30"></a><span class="co">    Solve the optimization problem for a single machine.</span></span>
+<span id="cb4-31"><a href="#cb4-31"></a><span class="co">    Returns the minimum tokens if successful, otherwise None.</span></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb4-33"><a href="#cb4-33"></a>    <span class="co"># Define constraints</span></span>
+<span id="cb4-34"><a href="#cb4-34"></a>    A_eq <span class="op">=</span> np.array(</span>
+<span id="cb4-35"><a href="#cb4-35"></a>        [</span>
+<span id="cb4-36"><a href="#cb4-36"></a>            [rule[<span class="st">&quot;A&quot;</span>][<span class="dv">0</span>], rule[<span class="st">&quot;B&quot;</span>][<span class="dv">0</span>]],  <span class="co"># Ax + Bx = PrizeX</span></span>
+<span id="cb4-37"><a href="#cb4-37"></a>            [rule[<span class="st">&quot;A&quot;</span>][<span class="dv">1</span>], rule[<span class="st">&quot;B&quot;</span>][<span class="dv">1</span>]],  <span class="co"># Ay + By = PrizeY</span></span>
+<span id="cb4-38"><a href="#cb4-38"></a>        ], </span>
+<span id="cb4-39"><a href="#cb4-39"></a>        dtype<span class="op">=</span>np.uint64</span>
+<span id="cb4-40"><a href="#cb4-40"></a>    )</span>
+<span id="cb4-41"><a href="#cb4-41"></a>    b_eq <span class="op">=</span> np.array(</span>
+<span id="cb4-42"><a href="#cb4-42"></a>        [</span>
+<span id="cb4-43"><a href="#cb4-43"></a>            rule[<span class="st">&quot;Prize&quot;</span>][<span class="dv">0</span>] <span class="op">+</span> large_constant,</span>
+<span id="cb4-44"><a href="#cb4-44"></a>            rule[<span class="st">&quot;Prize&quot;</span>][<span class="dv">1</span>] <span class="op">+</span> large_constant,</span>
+<span id="cb4-45"><a href="#cb4-45"></a>        ],</span>
+<span id="cb4-46"><a href="#cb4-46"></a>        dtype<span class="op">=</span>np.uint64</span>
+<span id="cb4-47"><a href="#cb4-47"></a>    )</span>
+<span id="cb4-48"><a href="#cb4-48"></a>    bounds <span class="op">=</span> [(<span class="dv">0</span>, <span class="va">None</span>), (<span class="dv">0</span>, <span class="va">None</span>)]  <span class="co"># Non-negative bounds for A and B</span></span>
+<span id="cb4-49"><a href="#cb4-49"></a></span>
+<span id="cb4-50"><a href="#cb4-50"></a>    <span class="co"># Solve linear program</span></span>
+<span id="cb4-51"><a href="#cb4-51"></a>    <span class="co"># Note: Presolve is disabled due to incorrect solutions in some cases with Scipy&#39;s linprog</span></span>
+<span id="cb4-52"><a href="#cb4-52"></a>    result <span class="op">=</span> linprog(</span>
+<span id="cb4-53"><a href="#cb4-53"></a>        c<span class="op">=</span>cost_coefficients, </span>
+<span id="cb4-54"><a href="#cb4-54"></a>        A_eq<span class="op">=</span>A_eq, </span>
+<span id="cb4-55"><a href="#cb4-55"></a>        b_eq<span class="op">=</span>b_eq, </span>
+<span id="cb4-56"><a href="#cb4-56"></a>        bounds<span class="op">=</span>bounds, </span>
+<span id="cb4-57"><a href="#cb4-57"></a>        integrality<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">1</span>], </span>
+<span id="cb4-58"><a href="#cb4-58"></a>        method<span class="op">=</span><span class="st">&quot;highs&quot;</span>, </span>
+<span id="cb4-59"><a href="#cb4-59"></a>        options<span class="op">=</span>{<span class="st">&quot;autoscale&quot;</span>: <span class="va">True</span>, <span class="st">&quot;presolve&quot;</span>: <span class="va">False</span>}</span>
+<span id="cb4-60"><a href="#cb4-60"></a>    )</span>
+<span id="cb4-61"><a href="#cb4-61"></a>    <span class="cf">return</span> <span class="bu">int</span>(result.fun) <span class="cf">if</span> result.success <span class="cf">else</span> <span class="va">None</span></span>
+<span id="cb4-62"><a href="#cb4-62"></a></span>
+<span id="cb4-63"><a href="#cb4-63"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb4-64"><a href="#cb4-64"></a>    <span class="co"># Constants</span></span>
+<span id="cb4-65"><a href="#cb4-65"></a>    COST_COEFFICIENTS <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">1</span>]  <span class="co"># Weights for A and B tokens</span></span>
+<span id="cb4-66"><a href="#cb4-66"></a>    LARGE_CONSTANT <span class="op">=</span> <span class="dv">10</span><span class="op">**</span><span class="dv">13</span>  <span class="co"># Adjustment for large prize values</span></span>
+<span id="cb4-67"><a href="#cb4-67"></a></span>
+<span id="cb4-68"><a href="#cb4-68"></a>    <span class="co"># Load and process machine data</span></span>
+<span id="cb4-69"><a href="#cb4-69"></a>    machine_rules <span class="op">=</span> load_machine_data(<span class="st">&quot;day13.txt&quot;</span>)</span>
+<span id="cb4-70"><a href="#cb4-70"></a></span>
+<span id="cb4-71"><a href="#cb4-71"></a>    <span class="co"># Calculate minimum tokens required</span></span>
+<span id="cb4-72"><a href="#cb4-72"></a>    tokens_min <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb4-73"><a href="#cb4-73"></a>    <span class="cf">for</span> rule <span class="kw">in</span> machine_rules:</span>
+<span id="cb4-74"><a href="#cb4-74"></a>        result <span class="op">=</span> solve_machine(rule, COST_COEFFICIENTS, LARGE_CONSTANT)</span>
+<span id="cb4-75"><a href="#cb4-75"></a>        <span class="cf">if</span> result <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb4-76"><a href="#cb4-76"></a>            tokens_min <span class="op">+=</span> result</span>
+<span id="cb4-77"><a href="#cb4-77"></a>        <span class="cf">else</span>:</span>
+<span id="cb4-78"><a href="#cb4-78"></a>            <span class="bu">print</span>(<span class="ss">f&quot;Warning: Optimization failed for machine </span><span class="sc">{</span>rule<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-79"><a href="#cb4-79"></a></span>
+<span id="cb4-80"><a href="#cb4-80"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Minimum tokens required: </span><span class="sc">{</span>tokens_min<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h2 id="what-i-learned">What I Learned</h2>
+<h3 id="improved-function-names-and-readability">Improved Function Names
+and Readability</h3>
+<ul>
+<li>ChatGPT emphasized using better and more clear function names to
+make the code more readable, as well as moving some hard coded values to
+constants rather than dispersed in the code.</li>
+<li>ChatGPT also mentioned the need for comments to explain the less
+obvious changes between Part 1 and Part 2 (like the reason for the large
+constant and why I set <code>presolve</code> to
+<code>false</code>).</li>
+</ul>
+<h3 id="solving-linear-system-without-linear-programming">Solving Linear
+System without Linear Programming</h3>
+<ul>
+<li>I wanted to use linear programming because it was fresh in my mind
+after taking my graduate algorithms course, but the system can be solved
+with basic linear algebra and matrix operations instead.</li>
+<li>Since this is a system of 2 equations with 2 unknowns, we can solve
+this using matrix operations by solving the equation <span
+class="math inline"><em>A</em><em>x</em>&#x2004;=&#x2004;<em>b</em></span> where <span
+class="math inline"><em>A</em></span> is the coefficient matrix for our
+2 equations, <span class="math inline"><em>x</em></span> is the variable
+matrix, and <span class="math inline"><em>b</em></span> is the constant
+matrix (what each equation is equal to).</li>
+<li>To solve the system, we can take the inverse of <span
+class="math inline"><em>A</em></span>, and <span
+class="math inline"><em>x</em>&#x2004;=&#x2004;<em>b</em><em>A</em><sup>&#x2212;1</sup></span>.
+Note this is only solvable if the determinant of <span
+class="math inline"><em>A</em></span> is not 0.</li>
+</ul>
+<h3 id="setting-presolve-to-false-in-scipy.linprog">Setting
+<code>presolve</code> to False in <code>scipy.linprog()</code></h3>
+<ul>
+<li>For part 2, when the numbers were really big, <code>linprog</code>
+kept giving a suboptimal answer. After snooping around the AoC Reddit
+page, I found a few others who used <code>linprog</code> for this
+problem, and found that <code>presolve</code> was the issue.</li>
+<li>The <code>presolve</code> parameters tries to rule out trivially
+infeasible or unbounded possible solutions to simplify the problem. With
+large numbers like this, it was unfortunately ruling out the solution.
+<a
+href="https://docs.scipy.org/doc//scipy-1.4.0/reference/generated/scipy.optimize.linprog.html">This
+page</a> is very helpful in explaining the specifics of the
+<code>presolve</code> parameter.</li>
+</ul>
+            <hr />
+            <p>Callista Krebs, 2024</p>
+        </article>
+    </main>
+    <style>
+        html { -webkit-text-size-adjust: 100%; }
+        pre > code.sourceCode { white-space: pre; position: relative; }
+        pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+        pre > code.sourceCode > span:empty { height: 1.2em; }
+        .sourceCode { overflow: visible; }
+        code.sourceCode > span { color: inherit; text-decoration: inherit; }
+        div.sourceCode { margin: 1em 0; }
+        pre.sourceCode { margin: 0; }
+        @media screen {
+        div.sourceCode { overflow: auto; }
+        }
+        @media print {
+        pre > code.sourceCode { white-space: pre-wrap; }
+        pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+        }
+        pre.numberSource code
+          { counter-reset: source-line 0; }
+        pre.numberSource code > span
+          { position: relative; left: -4em; counter-increment: source-line; }
+        pre.numberSource code > span > a:first-child::before
+          { content: counter(source-line);
+            position: relative; left: -1em; text-align: right; vertical-align: baseline;
+            border: none; display: inline-block;
+            -webkit-touch-callout: none; -webkit-user-select: none;
+            -khtml-user-select: none; -moz-user-select: none;
+            -ms-user-select: none; user-select: none;
+            padding: 0 4px; width: 4em;
+            color: #aaaaaa;
+          }
+        pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+        div.sourceCode
+          {   }
+        @media screen {
+        pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+        }
+        code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+        code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+        code span.at { color: #7d9029; } /* Attribute */
+        code span.bn { color: #40a070; } /* BaseN */
+        code span.bu { color: #008000; } /* BuiltIn */
+        code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+        code span.ch { color: #4070a0; } /* Char */
+        code span.cn { color: #880000; } /* Constant */
+        code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+        code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+        code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+        code span.dt { color: #902000; } /* DataType */
+        code span.dv { color: #40a070; } /* DecVal */
+        code span.er { color: #ff0000; font-weight: bold; } /* Error */
+        code span.ex { } /* Extension */
+        code span.fl { color: #40a070; } /* Float */
+        code span.fu { color: #06287e; } /* Function */
+        code span.im { color: #008000; font-weight: bold; } /* Import */
+        code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+        code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+        code span.op { color: #666666; } /* Operator */
+        code span.ot { color: #007020; } /* Other */
+        code span.pp { color: #bc7a00; } /* Preprocessor */
+        code span.sc { color: #4070a0; } /* SpecialChar */
+        code span.ss { color: #bb6688; } /* SpecialString */
+        code span.st { color: #4070a0; } /* String */
+        code span.va { color: #19177c; } /* Variable */
+        code span.vs { color: #4070a0; } /* VerbatimString */
+        code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    </style>
+</body>
+</html>

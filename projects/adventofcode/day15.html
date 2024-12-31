@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/site.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title></title>
+    
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Callista Krebs</h1>
+            <p>
+                <a href="/">Home</a>
+                <a href="/projects">Projects</a>
+                <a href="/contact.html">Contact</a>
+            </p>
+        </header>
+        <article>
+<!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="advent-of-code---day-15">Advent of Code - Day 15</h1>
+<p><a href="day14.html">&lt; Prev Day</a> <a href="day16.html">Next Day
+&gt;</a></p>
+<h2 id="part-1">Part 1</h2>
+<h3 id="my-code">My Code</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> time</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a>DIRECTIONS <span class="op">=</span> {</span>
+<span id="cb1-4"><a href="#cb1-4"></a>    <span class="st">&#39;&lt;&#39;</span>: (<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>),</span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="st">&#39;^&#39;</span>: (<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="st">&#39;&gt;&#39;</span>: (<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb1-7"><a href="#cb1-7"></a>    <span class="st">&#39;v&#39;</span>: (<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb1-8"><a href="#cb1-8"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9"></a></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">def</span> is_in_bounds(grid, r,c):</span>
+<span id="cb1-11"><a href="#cb1-11"></a>    <span class="cf">return</span> <span class="dv">0</span> <span class="op">&lt;=</span> r <span class="op">&lt;</span> <span class="bu">len</span>(grid) <span class="kw">and</span> <span class="dv">0</span> <span class="op">&lt;=</span> c <span class="op">&lt;</span> <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="kw">def</span> display_grid(grid):</span>
+<span id="cb1-14"><a href="#cb1-14"></a>    <span class="cf">for</span> row <span class="kw">in</span> grid:</span>
+<span id="cb1-15"><a href="#cb1-15"></a>        <span class="bu">print</span>(<span class="st">&quot;&quot;</span>.join(row))</span>
+<span id="cb1-16"><a href="#cb1-16"></a>    time.sleep(<span class="fl">0.1</span>)</span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="kw">def</span> move_rock(grid, r, c, move):</span>
+<span id="cb1-19"><a href="#cb1-19"></a>    dr, dc <span class="op">=</span> DIRECTIONS[move]</span>
+<span id="cb1-20"><a href="#cb1-20"></a>    nr, nc <span class="op">=</span>  r <span class="op">+</span> dr, c <span class="op">+</span> dc</span>
+<span id="cb1-21"><a href="#cb1-21"></a></span>
+<span id="cb1-22"><a href="#cb1-22"></a>    <span class="cf">if</span> <span class="kw">not</span> is_in_bounds(grid, nr, nc):</span>
+<span id="cb1-23"><a href="#cb1-23"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a>    </span>
+<span id="cb1-25"><a href="#cb1-25"></a>    <span class="cf">if</span> grid[nr][nc] <span class="op">==</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb1-26"><a href="#cb1-26"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a></span>
+<span id="cb1-28"><a href="#cb1-28"></a>    <span class="cf">if</span> grid[nr][nc] <span class="op">==</span> <span class="st">&quot;.&quot;</span>:</span>
+<span id="cb1-29"><a href="#cb1-29"></a>        grid[nr][nc] <span class="op">=</span> grid[r][c] <span class="co"># move rock over</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a>        <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a>    </span>
+<span id="cb1-32"><a href="#cb1-32"></a>    <span class="cf">return</span> move_rock(grid, nr, nc, move)</span>
+<span id="cb1-33"><a href="#cb1-33"></a></span>
+<span id="cb1-34"><a href="#cb1-34"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb1-35"><a href="#cb1-35"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day15.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb1-36"><a href="#cb1-36"></a>        grid, moves <span class="op">=</span> <span class="bu">tuple</span>(f.read().split(<span class="st">&quot;</span><span class="ch">\n\n</span><span class="st">&quot;</span>))</span>
+<span id="cb1-37"><a href="#cb1-37"></a>        grid <span class="op">=</span> [<span class="bu">list</span>(x) <span class="cf">for</span> x <span class="kw">in</span> grid.split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)]</span>
+<span id="cb1-38"><a href="#cb1-38"></a>        moves <span class="op">=</span> <span class="bu">list</span>(<span class="st">&#39;&#39;</span>.join(moves.split()))</span>
+<span id="cb1-39"><a href="#cb1-39"></a></span>
+<span id="cb1-40"><a href="#cb1-40"></a>    nrows <span class="op">=</span> <span class="bu">len</span>(grid)</span>
+<span id="cb1-41"><a href="#cb1-41"></a>    ncols <span class="op">=</span> <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb1-42"><a href="#cb1-42"></a>    <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(nrows):</span>
+<span id="cb1-43"><a href="#cb1-43"></a>        <span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span> (ncols):</span>
+<span id="cb1-44"><a href="#cb1-44"></a>            <span class="cf">if</span> grid[r][c] <span class="op">==</span> <span class="st">&quot;@&quot;</span>:</span>
+<span id="cb1-45"><a href="#cb1-45"></a>                curr_r, curr_c <span class="op">=</span> r,c</span>
+<span id="cb1-46"><a href="#cb1-46"></a></span>
+<span id="cb1-47"><a href="#cb1-47"></a>    <span class="cf">for</span> move <span class="kw">in</span> moves:</span>
+<span id="cb1-48"><a href="#cb1-48"></a>        dr, dc <span class="op">=</span> DIRECTIONS[move]</span>
+<span id="cb1-49"><a href="#cb1-49"></a>        nr, nc <span class="op">=</span> curr_r <span class="op">+</span> dr, curr_c <span class="op">+</span> dc</span>
+<span id="cb1-50"><a href="#cb1-50"></a>        <span class="cf">if</span> is_in_bounds(grid, nr, nc):</span>
+<span id="cb1-51"><a href="#cb1-51"></a>            <span class="cf">if</span> grid[nr][nc] <span class="op">==</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb1-52"><a href="#cb1-52"></a>                <span class="cf">continue</span> <span class="co"># can&#39;t move here</span></span>
+<span id="cb1-53"><a href="#cb1-53"></a></span>
+<span id="cb1-54"><a href="#cb1-54"></a>            <span class="cf">if</span> grid[nr][nc] <span class="op">==</span> <span class="st">&quot;.&quot;</span>:</span>
+<span id="cb1-55"><a href="#cb1-55"></a>                grid[nr][nc] <span class="op">=</span> grid[curr_r][curr_c]</span>
+<span id="cb1-56"><a href="#cb1-56"></a>                grid[curr_r][curr_c] <span class="op">=</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb1-57"><a href="#cb1-57"></a>                curr_r, curr_c <span class="op">=</span> nr, nc</span>
+<span id="cb1-58"><a href="#cb1-58"></a>            </span>
+<span id="cb1-59"><a href="#cb1-59"></a>            <span class="cf">if</span> grid[nr][nc] <span class="op">==</span> <span class="st">&quot;O&quot;</span>:</span>
+<span id="cb1-60"><a href="#cb1-60"></a>                <span class="cf">if</span> (move_rock(grid, nr, nc, move)):</span>
+<span id="cb1-61"><a href="#cb1-61"></a>                    <span class="co"># move robot only if the rock moved</span></span>
+<span id="cb1-62"><a href="#cb1-62"></a>                    grid[nr][nc] <span class="op">=</span> grid[curr_r][curr_c]</span>
+<span id="cb1-63"><a href="#cb1-63"></a>                    grid[curr_r][curr_c] <span class="op">=</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb1-64"><a href="#cb1-64"></a>                    curr_r, curr_c <span class="op">=</span> nr, nc</span>
+<span id="cb1-65"><a href="#cb1-65"></a></span>
+<span id="cb1-66"><a href="#cb1-66"></a>        display_grid(grid) </span>
+<span id="cb1-67"><a href="#cb1-67"></a></span>
+<span id="cb1-68"><a href="#cb1-68"></a>    <span class="bu">sum</span> <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-69"><a href="#cb1-69"></a>    <span class="cf">for</span> row <span class="kw">in</span> <span class="bu">range</span> (nrows):</span>
+<span id="cb1-70"><a href="#cb1-70"></a>        <span class="cf">for</span> col <span class="kw">in</span> <span class="bu">range</span> (ncols):</span>
+<span id="cb1-71"><a href="#cb1-71"></a>            <span class="cf">if</span> grid[row][col] <span class="op">==</span> <span class="st">&quot;O&quot;</span>:</span>
+<span id="cb1-72"><a href="#cb1-72"></a>                <span class="bu">sum</span> <span class="op">+=</span> <span class="dv">100</span><span class="op">*</span>row <span class="op">+</span> col</span>
+<span id="cb1-73"><a href="#cb1-73"></a></span>
+<span id="cb1-74"><a href="#cb1-74"></a>    <span class="bu">print</span>(<span class="bu">sum</span>)</span></code></pre></div>
+<h2 id="part-2">Part 2</h2>
+<h3 id="my-code-1">My Code</h3>
+<p>TBD! I still have not quite solved Day 15 Part 2&#x2026;</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"></code></pre></div>
+<h3 id="chatgpts-improved-code">ChatGPT&#x2019;s Improved Code</h3>
+<p>TBD! Until I can solve Day 15 part 2&#x2026;</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"></code></pre></div>
+<h2 id="what-i-learned">What I Learned</h2>
+<h3 id="chatgpt-cant-fix-everything">ChatGPT Can&#x2019;t Fix Everything</h3>
+<ul>
+<li>After several iterations and back and forth with ChatGPT, it always
+output code for Part 1 that gave the wrong answer. It insisted on using
+an iterative approach instead of recursive for moving the rocks, but as
+a result it never moved all the rocks correctly.</li>
+<li>Once I asked it to write the recursive method instead, it&#x2019;s code was
+roughly the same as mine, apart from a few formatting changes, such as
+combining the base cases into one <code>if</code> statement in
+<code>move_rock</code>, and renaming <code>sum</code> to
+<code>total</code>.</li>
+<li>For this reason, I didn&#x2019;t include an improved ChatGPT version of the
+code, because in my opinion there wasn&#x2019;t much improvment.</li>
+</ul>
+<h3 id="advent-of-code-gets-pretty-hard-in-the-back-half">Advent of Code
+Gets pretty hard in the back half!</h3>
+<ul>
+<li>After several days of attempting Day 15 Part 2, I still can&#x2019;t quite
+iron out all the edge cases, and it seems like ChatGPT starts to
+struggle with the logic as well.</li>
+<li>So far, Days 14 and 15 were the first problems where ChatGPT
+couldn&#x2019;t really improve my code in an effective way, which to me further
+indicates that the problems do get quite a bit harder.</li>
+</ul>
+            <hr />
+            <p>Callista Krebs, 2024</p>
+        </article>
+    </main>
+    <style>
+        html { -webkit-text-size-adjust: 100%; }
+        pre > code.sourceCode { white-space: pre; position: relative; }
+        pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+        pre > code.sourceCode > span:empty { height: 1.2em; }
+        .sourceCode { overflow: visible; }
+        code.sourceCode > span { color: inherit; text-decoration: inherit; }
+        div.sourceCode { margin: 1em 0; }
+        pre.sourceCode { margin: 0; }
+        @media screen {
+        div.sourceCode { overflow: auto; }
+        }
+        @media print {
+        pre > code.sourceCode { white-space: pre-wrap; }
+        pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+        }
+        pre.numberSource code
+          { counter-reset: source-line 0; }
+        pre.numberSource code > span
+          { position: relative; left: -4em; counter-increment: source-line; }
+        pre.numberSource code > span > a:first-child::before
+          { content: counter(source-line);
+            position: relative; left: -1em; text-align: right; vertical-align: baseline;
+            border: none; display: inline-block;
+            -webkit-touch-callout: none; -webkit-user-select: none;
+            -khtml-user-select: none; -moz-user-select: none;
+            -ms-user-select: none; user-select: none;
+            padding: 0 4px; width: 4em;
+            color: #aaaaaa;
+          }
+        pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+        div.sourceCode
+          {   }
+        @media screen {
+        pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+        }
+        code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+        code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+        code span.at { color: #7d9029; } /* Attribute */
+        code span.bn { color: #40a070; } /* BaseN */
+        code span.bu { color: #008000; } /* BuiltIn */
+        code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+        code span.ch { color: #4070a0; } /* Char */
+        code span.cn { color: #880000; } /* Constant */
+        code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+        code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+        code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+        code span.dt { color: #902000; } /* DataType */
+        code span.dv { color: #40a070; } /* DecVal */
+        code span.er { color: #ff0000; font-weight: bold; } /* Error */
+        code span.ex { } /* Extension */
+        code span.fl { color: #40a070; } /* Float */
+        code span.fu { color: #06287e; } /* Function */
+        code span.im { color: #008000; font-weight: bold; } /* Import */
+        code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+        code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+        code span.op { color: #666666; } /* Operator */
+        code span.ot { color: #007020; } /* Other */
+        code span.pp { color: #bc7a00; } /* Preprocessor */
+        code span.sc { color: #4070a0; } /* SpecialChar */
+        code span.ss { color: #bb6688; } /* SpecialString */
+        code span.st { color: #4070a0; } /* String */
+        code span.va { color: #19177c; } /* Variable */
+        code span.vs { color: #4070a0; } /* VerbatimString */
+        code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    </style>
+</body>
+</html>
