@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/site.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title></title>
+    
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Callista Krebs</h1>
+            <p>
+                <a href="/">Home</a>
+                <a href="/projects">Projects</a>
+                <a href="/contact.html">Contact</a>
+            </p>
+        </header>
+        <article>
+<!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="advent-of-code---wrap-up">Advent of Code - Wrap Up</h1>
+<p><a href="day16.html">&lt; Prev Day</a></p>
+<p>I know, I know&#x2026; it&#x2019;s 25 days of Christmas not 16. But the holidays
+got busy and I wanted to move on to a new project, so I gave myself
+until December 31 to finish as many of the problems I could, and then I
+called it. So, we ended up with 16 days.</p>
+<p>Overall, this was a really fun first just-for-me code adventure. The
+problems are interesting and challenging, the story line keeps it more
+engaging than generic LeetCode problems, and I enjoyed the Reddit
+community of people solving the same problems at the same time. So with
+that, here is a quick summary of some of the interesting stuff I learned
+along the way!</p>
+<h2 id="some-useful-things-i-learned">Some useful things I learned</h2>
+<h3 id="collections">Collections</h3>
+<ul>
+<li>The Python Collections module has several useful items such as
+<code>counter</code> and <code>defaultdict</code>.</li>
+<li>The <code>counter</code> object can tally the number of occurences
+of items in a list. It returns a dictionary with the items as keys and
+the values as the number of times the item occured in the list.</li>
+<li>You can also use <code>counter</code> to generate a list with a
+specified number of each element.</li>
+<li><code>defaultdict</code> is a dictionary object but lets you define
+a default value for items that are not yet defined. This makes it easier
+to avoid a <code>KeyError</code> when accessing items in the dictionary,
+because if a key does not exist, it is created with the default
+value.</li>
+</ul>
+<h3 id="efficiency">Efficiency</h3>
+<ul>
+<li>String concatenations in Python are expensive. Instead, you can
+create a list of the strings you want to concatenate, and then use
+<code>join</code> to combine them into one string.</li>
+<li>Using break statements in code can improve performance if you are
+using loops to search for a solution to something. Despite my long held
+belief that breaks should be avoided, in these situations it can save
+time so that you don&#x2019;t do unnecessary iterations of the loop.</li>
+</ul>
+<h3 id="convenient-python-tricks">Convenient Python Tricks</h3>
+<ul>
+<li>You can use integer math to avoid having to cast the result of math
+to integers. For example <code>a // b</code> is the integer result of
+<code>a</code> divided by <code>b</code>.</li>
+<li><code>List.index()</code> can be used to get the index of the first
+instance of an element in a list.</li>
+<li><code>itertools.product()</code> returns the cartesian product of
+the input, which is the set of all pairs of items in the input.</li>
+<li>Use <code>enumerate</code> to avoid having to manually track an
+index when looping through a list.</li>
+<li>Regex groups (not just Python). When you include parentheses in the
+Regex, only the items in the parentheses will be returned, but the whole
+regex will still be matched.</li>
+<li><code>functools.cache</code> is a built-in function cache that when
+used, creates a dictionary for the function arguments and stores the
+function output as their value.</li>
+<li><code>zip()</code> takes any number of iterators as an argument, and
+returns the pairs (or groups) of each element at each position in the
+iterators.</li>
+<li><code>heapq</code> is a built-in priority queue in Python,
+implemented as a minimum heap.</li>
+</ul>
+<h3 id="tricky-python-tricks">Tricky Python Tricks</h3>
+<ul>
+<li>Tuple comparisons are done elementwise, so comparing one tuple to
+another (in terms of &gt;, &lt;, ==), the first element of each tuple is
+compared, then the second, and so on.</li>
+<li>Copy behavior. A shallow copy of a list duplicates the outermost
+level of the list, but the items within the list reference the same
+object in memory. This means if you shallow copy a list of lists (an
+array), the rows will be duplicated, but the values in each row will
+still be a pointer to the original row. To avoid this issue, you have to
+use <code>deepcopy</code> instead.</li>
+<li>Overloading print. In Python, we overload <code>__str__</code> or
+<code>__repr__</code> and then when the object is passed to
+<code>print()</code>, whatever is returned by these is what is printed.
+<code>print()</code> will look for <code>__str__</code> first, and then
+use <code>__repr__</code> if it does not find it.</li>
+</ul>
+            <hr />
+            <p>Callista Krebs, 2024</p>
+        </article>
+    </main>
+    <style>
+        
+    </style>
+</body>
+</html>

@@ -1,5 +1,5 @@
 # Advent of Code - Day 16
-[< Prev Day](day15.html) [Next Day >](day17.html)
+[< Prev Day](day15.html) [Next Day >](day18.html)
 
 ## Part 1
 ### My Code

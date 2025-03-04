@@ -25,3 +25,5 @@ For each day, I completed the problem myself, and then asked ChatGPT how it woul
 * [Day 14](day14.html)
 * [Day 15](day15.html)
 * [Day 16](day16.html)
+* [Day 18](day18.html)
+<!-- * [Wrap Up](wrapup.html) -->
