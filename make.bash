@@ -16,7 +16,7 @@ htmlify projects/adventofcode/index.md projects/adventofcode/index.html
 htmlify projects/adventofcode/wrapup.md projects/adventofcode/wrapup.html
 htmlify projects/swebench/index.md projects/swebench/index.html
 
-for i in {1..18}; do
+for i in {1..19}; do
     htmlify projects/adventofcode/day$i.md projects/adventofcode/day$i.html
 done
     
