@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/site.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title></title>
+    
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>Callista Krebs</h1>
+            <p>
+                <a href="/">Home</a>
+                <a href="/projects">Projects</a>
+                <a href="/contact.html">Contact</a>
+            </p>
+        </header>
+        <article>
+<!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="advent-of-code---day-20">Advent of Code - Day 20</h1>
+<p><a href="day19.html">&lt; Prev Day</a> <a href="day21.html">Next Day
+&gt;</a></p>
+<h2 id="part-1">Part 1</h2>
+<h3 id="my-code">My Code</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict, deque</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> math</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a>CHEATCODE_LIMIT <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="kw">def</span> is_in_bounds(position, nrows, ncols):</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    <span class="cf">return</span> <span class="dv">0</span> <span class="op">&lt;=</span> position[<span class="dv">0</span>] <span class="op">&lt;</span> nrows <span class="kw">and</span> <span class="dv">0</span> <span class="op">&lt;=</span> position[<span class="dv">1</span>] <span class="op">&lt;</span> ncols</span>
+<span id="cb1-9"><a href="#cb1-9"></a></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">def</span> build_graph(grid):</span>
+<span id="cb1-11"><a href="#cb1-11"></a>    graph <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb1-12"><a href="#cb1-12"></a>    </span>
+<span id="cb1-13"><a href="#cb1-13"></a>    nrows <span class="op">=</span> <span class="bu">len</span>(grid)</span>
+<span id="cb1-14"><a href="#cb1-14"></a>    ncols <span class="op">=</span> <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb1-15"><a href="#cb1-15"></a>    start_coord <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a>    end_coord <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nrows):</span>
+<span id="cb1-19"><a href="#cb1-19"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(ncols):</span>
+<span id="cb1-20"><a href="#cb1-20"></a>            <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb1-21"><a href="#cb1-21"></a>                <span class="cf">continue</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>            <span class="cf">else</span>:</span>
+<span id="cb1-23"><a href="#cb1-23"></a>                <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;S&quot;</span>:</span>
+<span id="cb1-24"><a href="#cb1-24"></a>                    start_coord <span class="op">=</span> (i,j)</span>
+<span id="cb1-25"><a href="#cb1-25"></a>                <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;E&quot;</span>:</span>
+<span id="cb1-26"><a href="#cb1-26"></a>                    end_coord <span class="op">=</span> (i,j)</span>
+<span id="cb1-27"><a href="#cb1-27"></a>                <span class="co"># left, right, up, down</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>                neighbors <span class="op">=</span> [(i<span class="op">-</span><span class="dv">1</span>, j), (i<span class="op">+</span><span class="dv">1</span>, j), (i, j<span class="op">-</span><span class="dv">1</span>), (i, j<span class="op">+</span><span class="dv">1</span>)]</span>
+<span id="cb1-29"><a href="#cb1-29"></a>                <span class="cf">for</span> neighbor <span class="kw">in</span> neighbors:</span>
+<span id="cb1-30"><a href="#cb1-30"></a>                    <span class="cf">if</span> is_in_bounds(neighbor, nrows, ncols) <span class="kw">and</span> grid[neighbor[<span class="dv">0</span>]][neighbor[<span class="dv">1</span>]] <span class="op">!=</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb1-31"><a href="#cb1-31"></a>                        graph[(i,j)].append(neighbor)</span>
+<span id="cb1-32"><a href="#cb1-32"></a>    </span>
+<span id="cb1-33"><a href="#cb1-33"></a>    <span class="cf">return</span> graph, start_coord, end_coord</span>
+<span id="cb1-34"><a href="#cb1-34"></a></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="kw">def</span> bfs(graph, start <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>)):</span>
+<span id="cb1-36"><a href="#cb1-36"></a>    queue <span class="op">=</span> [start]</span>
+<span id="cb1-37"><a href="#cb1-37"></a>    visited <span class="op">=</span> <span class="bu">set</span>([start])</span>
+<span id="cb1-38"><a href="#cb1-38"></a>    dist <span class="op">=</span> {start: <span class="dv">0</span>}</span>
+<span id="cb1-39"><a href="#cb1-39"></a>    path <span class="op">=</span> []</span>
+<span id="cb1-40"><a href="#cb1-40"></a></span>
+<span id="cb1-41"><a href="#cb1-41"></a>    <span class="cf">while</span> queue:</span>
+<span id="cb1-42"><a href="#cb1-42"></a>        current <span class="op">=</span> queue.pop(<span class="dv">0</span>)</span>
+<span id="cb1-43"><a href="#cb1-43"></a>        path.append(current)</span>
+<span id="cb1-44"><a href="#cb1-44"></a>        <span class="cf">for</span> neighbor <span class="kw">in</span> graph[current]:</span>
+<span id="cb1-45"><a href="#cb1-45"></a>            <span class="cf">if</span> neighbor <span class="kw">not</span> <span class="kw">in</span> visited <span class="kw">or</span> dist[neighbor] <span class="op">&gt;</span> dist[current] <span class="op">+</span> <span class="dv">1</span>:</span>
+<span id="cb1-46"><a href="#cb1-46"></a>                dist[neighbor] <span class="op">=</span> dist[current] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a>                visited.add(neighbor)</span>
+<span id="cb1-48"><a href="#cb1-48"></a>                queue.append(neighbor)    </span>
+<span id="cb1-49"><a href="#cb1-49"></a>    </span>
+<span id="cb1-50"><a href="#cb1-50"></a>    <span class="cf">return</span> visited, dist,path</span>
+<span id="cb1-51"><a href="#cb1-51"></a></span>
+<span id="cb1-52"><a href="#cb1-52"></a></span>
+<span id="cb1-53"><a href="#cb1-53"></a><span class="kw">def</span> get_path(prev, start_i, end_i):</span>
+<span id="cb1-54"><a href="#cb1-54"></a>    <span class="cf">if</span> prev[start_i][end_i] <span class="op">==</span> <span class="va">None</span>:</span>
+<span id="cb1-55"><a href="#cb1-55"></a>        <span class="cf">return</span> []</span>
+<span id="cb1-56"><a href="#cb1-56"></a></span>
+<span id="cb1-57"><a href="#cb1-57"></a>    path <span class="op">=</span> []</span>
+<span id="cb1-58"><a href="#cb1-58"></a>    path.append(end_i)</span>
+<span id="cb1-59"><a href="#cb1-59"></a>    <span class="cf">while</span> start_i <span class="op">!=</span> end_i:</span>
+<span id="cb1-60"><a href="#cb1-60"></a>        end_i <span class="op">=</span> <span class="bu">int</span>(prev[start_i][end_i])</span>
+<span id="cb1-61"><a href="#cb1-61"></a>        path.append(end_i)</span>
+<span id="cb1-62"><a href="#cb1-62"></a></span>
+<span id="cb1-63"><a href="#cb1-63"></a>    <span class="cf">return</span> path</span>
+<span id="cb1-64"><a href="#cb1-64"></a></span>
+<span id="cb1-65"><a href="#cb1-65"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb1-66"><a href="#cb1-66"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day20.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb1-67"><a href="#cb1-67"></a>        racetrack <span class="op">=</span> [<span class="bu">list</span>(x) <span class="cf">for</span> x <span class="kw">in</span> f.read().split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)]</span>
+<span id="cb1-68"><a href="#cb1-68"></a></span>
+<span id="cb1-69"><a href="#cb1-69"></a>    <span class="co"># Build a graph of the input space, nodes are the positions in the racetrack, edges are between adjacent spaces that arent a wall</span></span>
+<span id="cb1-70"><a href="#cb1-70"></a>    <span class="co"># All edge weights are 1</span></span>
+<span id="cb1-71"><a href="#cb1-71"></a>    graph, start, end <span class="op">=</span> build_graph(racetrack)</span>
+<span id="cb1-72"><a href="#cb1-72"></a></span>
+<span id="cb1-73"><a href="#cb1-73"></a>    <span class="co"># Get path with BFS</span></span>
+<span id="cb1-74"><a href="#cb1-74"></a>    _, dist, path <span class="op">=</span> bfs(graph, start)</span>
+<span id="cb1-75"><a href="#cb1-75"></a></span>
+<span id="cb1-76"><a href="#cb1-76"></a>    <span class="co"># Get pairs that are 100 moves apart</span></span>
+<span id="cb1-77"><a href="#cb1-77"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-78"><a href="#cb1-78"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(path)):</span>
+<span id="cb1-79"><a href="#cb1-79"></a>        candidates <span class="op">=</span> path[i <span class="op">+</span> CHEATCODE_LIMIT <span class="op">+</span> <span class="dv">2</span>:]</span>
+<span id="cb1-80"><a href="#cb1-80"></a>        </span>
+<span id="cb1-81"><a href="#cb1-81"></a>        <span class="cf">for</span> candidate <span class="kw">in</span> candidates:</span>
+<span id="cb1-82"><a href="#cb1-82"></a>            <span class="cf">if</span> (path[i][<span class="dv">0</span>] <span class="op">==</span> candidate[<span class="dv">0</span>]) <span class="kw">and</span> (<span class="bu">abs</span>(path[i][<span class="dv">1</span>] <span class="op">-</span> candidate[<span class="dv">1</span>]) <span class="op">==</span> <span class="dv">2</span>):</span>
+<span id="cb1-83"><a href="#cb1-83"></a>                min_v <span class="op">=</span> <span class="bu">min</span>(path[i][<span class="dv">1</span>], candidate[<span class="dv">1</span>])</span>
+<span id="cb1-84"><a href="#cb1-84"></a>                mid <span class="op">=</span> min_v <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb1-85"><a href="#cb1-85"></a></span>
+<span id="cb1-86"><a href="#cb1-86"></a>                <span class="cf">if</span> racetrack[path[i][<span class="dv">0</span>]][mid] <span class="op">==</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb1-87"><a href="#cb1-87"></a>                    count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-88"><a href="#cb1-88"></a></span>
+<span id="cb1-89"><a href="#cb1-89"></a>            <span class="cf">if</span> (path[i][<span class="dv">1</span>] <span class="op">==</span> candidate[<span class="dv">1</span>]) <span class="kw">and</span> (<span class="bu">abs</span>(path[i][<span class="dv">0</span>] <span class="op">-</span> candidate[<span class="dv">0</span>]) <span class="op">==</span> <span class="dv">2</span>):</span>
+<span id="cb1-90"><a href="#cb1-90"></a>                min_v <span class="op">=</span> <span class="bu">min</span>(path[i][<span class="dv">0</span>], candidate[<span class="dv">0</span>])</span>
+<span id="cb1-91"><a href="#cb1-91"></a>                mid <span class="op">=</span> min_v <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb1-92"><a href="#cb1-92"></a></span>
+<span id="cb1-93"><a href="#cb1-93"></a>                <span class="cf">if</span> racetrack[mid][path[i][<span class="dv">1</span>]] <span class="op">==</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb1-94"><a href="#cb1-94"></a>                    count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-95"><a href="#cb1-95"></a></span>
+<span id="cb1-96"><a href="#cb1-96"></a>    <span class="bu">print</span>(count)</span></code></pre></div>
+<h3 id="chatgpts-improved-code">ChatGPT&#x2019;s Improved Code</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict, deque</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>MOVE_LIMIT <span class="op">=</span> <span class="dv">100</span>  <span class="co"># Steps apart to look for valid positions</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="kw">def</span> is_in_bounds(position, nrows, ncols):</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="cf">return</span> <span class="dv">0</span> <span class="op">&lt;=</span> position[<span class="dv">0</span>] <span class="op">&lt;</span> nrows <span class="kw">and</span> <span class="dv">0</span> <span class="op">&lt;=</span> position[<span class="dv">1</span>] <span class="op">&lt;</span> ncols</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="kw">def</span> build_graph(grid):</span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="co">&quot;&quot;&quot;Build graph from the racetrack grid.&quot;&quot;&quot;</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>    graph <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb2-11"><a href="#cb2-11"></a>    nrows, ncols <span class="op">=</span> <span class="bu">len</span>(grid), <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb2-12"><a href="#cb2-12"></a>    start_coord <span class="op">=</span> end_coord <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a></span>
+<span id="cb2-14"><a href="#cb2-14"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nrows):</span>
+<span id="cb2-15"><a href="#cb2-15"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(ncols):</span>
+<span id="cb2-16"><a href="#cb2-16"></a>            <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb2-17"><a href="#cb2-17"></a>                <span class="cf">continue</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>            <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;S&quot;</span>:</span>
+<span id="cb2-19"><a href="#cb2-19"></a>                start_coord <span class="op">=</span> (i, j)</span>
+<span id="cb2-20"><a href="#cb2-20"></a>            <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;E&quot;</span>:</span>
+<span id="cb2-21"><a href="#cb2-21"></a>                end_coord <span class="op">=</span> (i, j)</span>
+<span id="cb2-22"><a href="#cb2-22"></a>            <span class="cf">for</span> ni, nj <span class="kw">in</span> [(i<span class="op">-</span><span class="dv">1</span>, j), (i<span class="op">+</span><span class="dv">1</span>, j), (i, j<span class="op">-</span><span class="dv">1</span>), (i, j<span class="op">+</span><span class="dv">1</span>)]:</span>
+<span id="cb2-23"><a href="#cb2-23"></a>                <span class="cf">if</span> is_in_bounds((ni, nj), nrows, ncols) <span class="kw">and</span> grid[ni][nj] <span class="op">!=</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb2-24"><a href="#cb2-24"></a>                    graph[(i, j)].append((ni, nj))</span>
+<span id="cb2-25"><a href="#cb2-25"></a></span>
+<span id="cb2-26"><a href="#cb2-26"></a>    <span class="cf">return</span> graph, start_coord, end_coord</span>
+<span id="cb2-27"><a href="#cb2-27"></a></span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="kw">def</span> bfs(graph, start):</span>
+<span id="cb2-29"><a href="#cb2-29"></a>    <span class="co">&quot;&quot;&quot;Run BFS to get distances from the start node.&quot;&quot;&quot;</span></span>
+<span id="cb2-30"><a href="#cb2-30"></a>    queue <span class="op">=</span> deque([start])</span>
+<span id="cb2-31"><a href="#cb2-31"></a>    visited <span class="op">=</span> <span class="bu">set</span>([start])</span>
+<span id="cb2-32"><a href="#cb2-32"></a>    dist <span class="op">=</span> {start: <span class="dv">0</span>}</span>
+<span id="cb2-33"><a href="#cb2-33"></a></span>
+<span id="cb2-34"><a href="#cb2-34"></a>    <span class="cf">while</span> queue:</span>
+<span id="cb2-35"><a href="#cb2-35"></a>        current <span class="op">=</span> queue.popleft()</span>
+<span id="cb2-36"><a href="#cb2-36"></a>        <span class="cf">for</span> neighbor <span class="kw">in</span> graph[current]:</span>
+<span id="cb2-37"><a href="#cb2-37"></a>            <span class="cf">if</span> neighbor <span class="kw">not</span> <span class="kw">in</span> visited:</span>
+<span id="cb2-38"><a href="#cb2-38"></a>                visited.add(neighbor)</span>
+<span id="cb2-39"><a href="#cb2-39"></a>                dist[neighbor] <span class="op">=</span> dist[current] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a>                queue.append(neighbor)</span>
+<span id="cb2-41"><a href="#cb2-41"></a></span>
+<span id="cb2-42"><a href="#cb2-42"></a>    <span class="cf">return</span> dist</span>
+<span id="cb2-43"><a href="#cb2-43"></a></span>
+<span id="cb2-44"><a href="#cb2-44"></a><span class="kw">def</span> count_valid_pairs(dist, grid):</span>
+<span id="cb2-45"><a href="#cb2-45"></a>    <span class="co">&quot;&quot;&quot;Count valid pairs of positions that are MOVE_LIMIT steps apart and blocked by a wall.&quot;&quot;&quot;</span></span>
+<span id="cb2-46"><a href="#cb2-46"></a>    positions_by_dist <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb2-47"><a href="#cb2-47"></a>    <span class="cf">for</span> pos, d <span class="kw">in</span> dist.items():</span>
+<span id="cb2-48"><a href="#cb2-48"></a>        positions_by_dist[d].append(pos)</span>
+<span id="cb2-49"><a href="#cb2-49"></a></span>
+<span id="cb2-50"><a href="#cb2-50"></a>    max_dist <span class="op">=</span> <span class="bu">max</span>(dist.values())</span>
+<span id="cb2-51"><a href="#cb2-51"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-52"><a href="#cb2-52"></a></span>
+<span id="cb2-53"><a href="#cb2-53"></a>    <span class="cf">for</span> d <span class="kw">in</span> <span class="bu">range</span>(max_dist <span class="op">-</span> MOVE_LIMIT <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb2-54"><a href="#cb2-54"></a>        <span class="cf">for</span> a <span class="kw">in</span> positions_by_dist[d]:</span>
+<span id="cb2-55"><a href="#cb2-55"></a>            <span class="cf">for</span> b <span class="kw">in</span> positions_by_dist[d <span class="op">+</span> MOVE_LIMIT]:</span>
+<span id="cb2-56"><a href="#cb2-56"></a>                <span class="cf">if</span> a[<span class="dv">0</span>] <span class="op">==</span> b[<span class="dv">0</span>] <span class="kw">and</span> <span class="bu">abs</span>(a[<span class="dv">1</span>] <span class="op">-</span> b[<span class="dv">1</span>]) <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb2-57"><a href="#cb2-57"></a>                    mid_col <span class="op">=</span> (a[<span class="dv">1</span>] <span class="op">+</span> b[<span class="dv">1</span>]) <span class="op">//</span> <span class="dv">2</span></span>
+<span id="cb2-58"><a href="#cb2-58"></a>                    <span class="cf">if</span> grid[a[<span class="dv">0</span>]][mid_col] <span class="op">==</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb2-59"><a href="#cb2-59"></a>                        count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-60"><a href="#cb2-60"></a>                <span class="cf">elif</span> a[<span class="dv">1</span>] <span class="op">==</span> b[<span class="dv">1</span>] <span class="kw">and</span> <span class="bu">abs</span>(a[<span class="dv">0</span>] <span class="op">-</span> b[<span class="dv">0</span>]) <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb2-61"><a href="#cb2-61"></a>                    mid_row <span class="op">=</span> (a[<span class="dv">0</span>] <span class="op">+</span> b[<span class="dv">0</span>]) <span class="op">//</span> <span class="dv">2</span></span>
+<span id="cb2-62"><a href="#cb2-62"></a>                    <span class="cf">if</span> grid[mid_row][a[<span class="dv">1</span>]] <span class="op">==</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb2-63"><a href="#cb2-63"></a>                        count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-64"><a href="#cb2-64"></a></span>
+<span id="cb2-65"><a href="#cb2-65"></a>    <span class="cf">return</span> count</span>
+<span id="cb2-66"><a href="#cb2-66"></a></span>
+<span id="cb2-67"><a href="#cb2-67"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb2-68"><a href="#cb2-68"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day20.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb2-69"><a href="#cb2-69"></a>        racetrack <span class="op">=</span> [<span class="bu">list</span>(line) <span class="cf">for</span> line <span class="kw">in</span> f.read().strip().splitlines()]</span>
+<span id="cb2-70"><a href="#cb2-70"></a></span>
+<span id="cb2-71"><a href="#cb2-71"></a>    graph, start, end <span class="op">=</span> build_graph(racetrack)</span>
+<span id="cb2-72"><a href="#cb2-72"></a>    dist <span class="op">=</span> bfs(graph, start)</span>
+<span id="cb2-73"><a href="#cb2-73"></a>    result <span class="op">=</span> count_valid_pairs(dist, racetrack)</span>
+<span id="cb2-74"><a href="#cb2-74"></a>    <span class="bu">print</span>(result)</span></code></pre></div>
+<h2 id="part-2">Part 2</h2>
+<h3 id="my-code-1">My Code</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python numberlines"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict, deque</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>TIME_SAVED_MIN <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> is_in_bounds(position, nrows, ncols):</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span> <span class="op">&lt;=</span> position[<span class="dv">0</span>] <span class="op">&lt;</span> nrows <span class="kw">and</span> <span class="dv">0</span> <span class="op">&lt;=</span> position[<span class="dv">1</span>] <span class="op">&lt;</span> ncols</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_graph(grid, walls<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    graph <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    nrows <span class="op">=</span> <span class="bu">len</span>(grid)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    ncols <span class="op">=</span> <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    start_coord <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    end_coord <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nrows):</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(ncols):</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;#&quot;</span> <span class="kw">and</span> walls:</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;S&quot;</span>:</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                    start_coord <span class="op">=</span> (i,j)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;E&quot;</span>:</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                    end_coord <span class="op">=</span> (i,j)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                <span class="co"># left, right, up, down</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                neighbors <span class="op">=</span> [(i<span class="op">-</span><span class="dv">1</span>, j), (i<span class="op">+</span><span class="dv">1</span>, j), (i, j<span class="op">-</span><span class="dv">1</span>), (i, j<span class="op">+</span><span class="dv">1</span>)]</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> neighbor <span class="kw">in</span> neighbors:</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> walls:</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">if</span> is_in_bounds(neighbor, nrows, ncols) <span class="kw">and</span> grid[neighbor[<span class="dv">0</span>]][neighbor[<span class="dv">1</span>]] <span class="op">!=</span> <span class="st">&quot;#&quot;</span>:</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                            graph[(i,j)].append(neighbor)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">else</span>:</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">if</span> is_in_bounds(neighbor, nrows, ncols):</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                            graph[(i,j)].append(neighbor)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> graph, start_coord, end_coord</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bfs(graph, start <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>)):</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    queue <span class="op">=</span> [start]</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    visited <span class="op">=</span> <span class="bu">set</span>([start])</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    dist <span class="op">=</span> {start: <span class="dv">0</span>}</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> []</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> queue:</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>        current <span class="op">=</span> queue.pop(<span class="dv">0</span>)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>        path.append(current)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> neighbor <span class="kw">in</span> graph[current]:</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> neighbor <span class="kw">not</span> <span class="kw">in</span> visited <span class="kw">or</span> dist[neighbor] <span class="op">&gt;</span> dist[current] <span class="op">+</span> <span class="dv">1</span>:</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>                dist[neighbor] <span class="op">=</span> dist[current] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>                visited.add(neighbor)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>                queue.append(neighbor)    </span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> visited, dist,path</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_path(prev, start_i, end_i):</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> prev[start_i][end_i] <span class="op">==</span> <span class="va">None</span>:</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> []</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> []</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    path.append(end_i)</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> start_i <span class="op">!=</span> end_i:</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>        end_i <span class="op">=</span> <span class="bu">int</span>(prev[start_i][end_i])</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>        path.append(end_i)</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> path</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day20.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>        racetrack <span class="op">=</span> [<span class="bu">list</span>(x) <span class="cf">for</span> x <span class="kw">in</span> f.read().split(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)]</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Build a graph of the input space, nodes are the positions in the racetrack, edges are between adjacent spaces that arent a wall</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># All edge weights are 1</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    walled_graph, start, end <span class="op">=</span> build_graph(racetrack)</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>    unwalled_graph, start, end <span class="op">=</span> build_graph(racetrack, walls<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get path with BFS</span></span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>    _, dist, path <span class="op">=</span> bfs(walled_graph, start)</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get pairs that are 100 moves apart</span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>    bfs_cache <span class="op">=</span> {}</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(path)):</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span><span class="bu">len</span>(path)<span class="sc">}</span><span class="ss"> iteration&quot;</span>)</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>        candidates <span class="op">=</span> path[i <span class="op">+</span> TIME_SAVED_MIN:]</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> candidate <span class="kw">in</span> candidates:</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>            curr_distance <span class="op">=</span> path.index(candidate) <span class="op">-</span> i <span class="co"># how far apart these nodes are in the path</span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>            cheat_distance <span class="op">=</span> <span class="bu">abs</span>(path[i][<span class="dv">0</span>]<span class="op">-</span>candidate[<span class="dv">0</span>]) <span class="op">+</span> <span class="bu">abs</span>(path[i][<span class="dv">1</span>]<span class="op">-</span>candidate[<span class="dv">1</span>])</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> cheat_distance <span class="op">&lt;=</span> <span class="dv">20</span> <span class="kw">and</span> (curr_distance <span class="op">-</span> cheat_distance <span class="op">&gt;=</span> TIME_SAVED_MIN):</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>                count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(count)</span></code></pre></div>
+<h3 id="chatgpts-improved-code-1">ChatGPT&#x2019;s Improved Code</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python numberlines"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict, deque</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>TIME_SAVED_MIN <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> is_in_bounds(position, nrows, ncols):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span> <span class="op">&lt;=</span> position[<span class="dv">0</span>] <span class="op">&lt;</span> nrows <span class="kw">and</span> <span class="dv">0</span> <span class="op">&lt;=</span> position[<span class="dv">1</span>] <span class="op">&lt;</span> ncols</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_graph(grid, walls<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    graph <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    nrows, ncols <span class="op">=</span> <span class="bu">len</span>(grid), <span class="bu">len</span>(grid[<span class="dv">0</span>])</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    start_coord <span class="op">=</span> end_coord <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nrows):</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(ncols):</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;#&quot;</span> <span class="kw">and</span> walls:</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;S&quot;</span>:</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                start_coord <span class="op">=</span> (i, j)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> grid[i][j] <span class="op">==</span> <span class="st">&quot;E&quot;</span>:</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                end_coord <span class="op">=</span> (i, j)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> ni, nj <span class="kw">in</span> [(i<span class="op">-</span><span class="dv">1</span>, j), (i<span class="op">+</span><span class="dv">1</span>, j), (i, j<span class="op">-</span><span class="dv">1</span>), (i, j<span class="op">+</span><span class="dv">1</span>)]:</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> is_in_bounds((ni, nj), nrows, ncols) <span class="kw">and</span> (<span class="kw">not</span> walls <span class="kw">or</span> grid[ni][nj] <span class="op">!=</span> <span class="st">&quot;#&quot;</span>):</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                    graph[(i, j)].append((ni, nj))</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> graph, start_coord, end_coord</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bfs(graph, start):</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Standard BFS, returns a distance dict.&quot;&quot;&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    queue <span class="op">=</span> deque([start])</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    dist <span class="op">=</span> {start: <span class="dv">0</span>}</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    visited <span class="op">=</span> {start}</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> queue:</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>        current <span class="op">=</span> queue.popleft()</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> neighbor <span class="kw">in</span> graph[current]:</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> neighbor <span class="kw">not</span> <span class="kw">in</span> visited:</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>                visited.add(neighbor)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>                dist[neighbor] <span class="op">=</span> dist[current] <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>                queue.append(neighbor)</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dist</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;day20.txt&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>        racetrack <span class="op">=</span> [<span class="bu">list</span>(line) <span class="cf">for</span> line <span class="kw">in</span> f.read().strip().splitlines()]</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    walled_graph, start, _ <span class="op">=</span> build_graph(racetrack, walls<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    unwalled_graph, _, _ <span class="op">=</span> build_graph(racetrack, walls<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get main path</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    dist_from_start <span class="op">=</span> bfs(walled_graph, start)</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Order nodes by their distance from start</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    max_dist <span class="op">=</span> <span class="bu">max</span>(dist_from_start.values())</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    ordered_path <span class="op">=</span> [<span class="va">None</span>] <span class="op">*</span> (max_dist <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> pos, d <span class="kw">in</span> dist_from_start.items():</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>        ordered_path[d] <span class="op">=</span> pos</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ordered_path) <span class="op">-</span> TIME_SAVED_MIN):</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>        a <span class="op">=</span> ordered_path[i]</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i <span class="op">+</span> TIME_SAVED_MIN, <span class="bu">len</span>(ordered_path)):</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>            b <span class="op">=</span> ordered_path[j]</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>            manhattan <span class="op">=</span> <span class="bu">abs</span>(a[<span class="dv">0</span>] <span class="op">-</span> b[<span class="dv">0</span>]) <span class="op">+</span> <span class="bu">abs</span>(a[<span class="dv">1</span>] <span class="op">-</span> b[<span class="dv">1</span>])</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>            actual_steps <span class="op">=</span> j <span class="op">-</span> i</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> manhattan <span class="op">&lt;=</span> <span class="dv">20</span> <span class="kw">and</span> (actual_steps <span class="op">-</span> manhattan <span class="op">&gt;=</span> TIME_SAVED_MIN):</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>                count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(count)</span></code></pre></div>
+<h2 id="what-i-learned">What I Learned</h2>
+<h3
+id="using-a-dictionary-to-keep-track-of-what-positions-are-what-distance-apart">Using
+a dictionary to keep track of what positions are what distance
+apart</h3>
+<ul>
+<li>ChatGPT&#x2019;s cleverly used a dictionary (aka a hash table) to make it
+easy to look up what other positions are at least 100 steps away from
+the current position.</li>
+<li>This wasn&#x2019;t entirely necessary in Part 1 of this problem since there
+is only 1 path to get from start to end in the graph, but is good to
+keep in mind for other graph problems where this wouldnt be the
+case.</li>
+<li>It did help a lot to improve performance in Part 2, since the
+<code>path.index(candidate)</code> step is O(n).</li>
+</ul>
+<h3 id="using-deque.popleft-instead-of-list.pop-in-bfs">Using
+<code>deque.popleft()</code> instead of <code>list.pop()</code> in
+BFS</h3>
+<ul>
+<li><code>list.pop()</code> is O(n) while <code>deque.popleft()</code>
+is O(1)</li>
+</ul>
+<h3 id="chatgpt-has-gotten-a-lot-smarter">ChatGPT has gotten a lot
+smarter</h3>
+<ul>
+<li>I have been mozying through the last couple of AoC problems for fun
+the last few months, and turns out ChatGPT&#x2019;s programming skills have
+greatly improved since December 2024.</li>
+<li>In my opinion it seems like it now explains a lot more without being
+asked. For example it included major and minor cleanups and a TLDR at
+the end to summarize its changes.</li>
+<li>It offered to help with Part 2 after I asked for improvements for my
+Part 1 code, which I assume is a result of it now having access to the
+internet.</li>
+<li>It uses Emojis a lot now, which is fun!</li>
+<li>It seems like it has a better intuition about code in general; for
+example, giving reasonable variable name suggestions and removing code
+that is unused.</li>
+</ul>
+            <hr />
+            <p>Callista Krebs, 2024</p>
+        </article>
+    </main>
+    <style>
+        html { -webkit-text-size-adjust: 100%; }
+        pre > code.sourceCode { white-space: pre; position: relative; }
+        pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+        pre > code.sourceCode > span:empty { height: 1.2em; }
+        .sourceCode { overflow: visible; }
+        code.sourceCode > span { color: inherit; text-decoration: inherit; }
+        div.sourceCode { margin: 1em 0; }
+        pre.sourceCode { margin: 0; }
+        @media screen {
+        div.sourceCode { overflow: auto; }
+        }
+        @media print {
+        pre > code.sourceCode { white-space: pre-wrap; }
+        pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+        }
+        pre.numberSource code
+          { counter-reset: source-line 0; }
+        pre.numberSource code > span
+          { position: relative; left: -4em; counter-increment: source-line; }
+        pre.numberSource code > span > a:first-child::before
+          { content: counter(source-line);
+            position: relative; left: -1em; text-align: right; vertical-align: baseline;
+            border: none; display: inline-block;
+            -webkit-touch-callout: none; -webkit-user-select: none;
+            -khtml-user-select: none; -moz-user-select: none;
+            -ms-user-select: none; user-select: none;
+            padding: 0 4px; width: 4em;
+            color: #aaaaaa;
+          }
+        pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+        div.sourceCode
+          {   }
+        @media screen {
+        pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+        }
+        code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+        code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+        code span.at { color: #7d9029; } /* Attribute */
+        code span.bn { color: #40a070; } /* BaseN */
+        code span.bu { color: #008000; } /* BuiltIn */
+        code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+        code span.ch { color: #4070a0; } /* Char */
+        code span.cn { color: #880000; } /* Constant */
+        code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+        code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+        code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+        code span.dt { color: #902000; } /* DataType */
+        code span.dv { color: #40a070; } /* DecVal */
+        code span.er { color: #ff0000; font-weight: bold; } /* Error */
+        code span.ex { } /* Extension */
+        code span.fl { color: #40a070; } /* Float */
+        code span.fu { color: #06287e; } /* Function */
+        code span.im { color: #008000; font-weight: bold; } /* Import */
+        code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+        code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+        code span.op { color: #666666; } /* Operator */
+        code span.ot { color: #007020; } /* Other */
+        code span.pp { color: #bc7a00; } /* Preprocessor */
+        code span.sc { color: #4070a0; } /* SpecialChar */
+        code span.ss { color: #bb6688; } /* SpecialString */
+        code span.st { color: #4070a0; } /* String */
+        code span.va { color: #19177c; } /* Variable */
+        code span.vs { color: #4070a0; } /* VerbatimString */
+        code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    </style>
+</body>
+</html>
