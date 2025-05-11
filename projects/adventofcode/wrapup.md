@@ -1,9 +1,9 @@
 # Advent of Code - Wrap Up
-[< Prev Day](day16.html)
+[< Prev Day](day20.html)
 
-I know, I know... it's 25 days of Christmas not 16. But the holidays got busy and I wanted to move on to a new project, so I gave myself until December 31 to finish as many of the problems I could, and then I called it. So, we ended up with 16 days.
+I know, I know... it's 25 days of Christmas not 20. But the holidays got busy and I tried to catch up in the new year, but eventually I wanted to move on to a new project, so I finally called it after day 20. Maybe I'll poke through the last 5 as the year goes on... maybe.
 
-Overall, this was a really fun first just-for-me code adventure. The problems are interesting and challenging, the story line keeps it more engaging than generic LeetCode problems, and I enjoyed the Reddit community of people solving the same problems at the same time. So with that, here is a quick summary of some of the interesting stuff I learned along the way!
+Overall, this was a really fun first just-for-me code adventure! The problems are interesting and challenging, the story line keeps it more engaging than generic LeetCode problems, and I enjoyed the Reddit community of people solving the same problems at the same time. So with that, here is a quick summary of some of the interesting stuff I learned along the way!
 
 ## Some useful things I learned
 ### Collections
